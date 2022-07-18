@@ -6,12 +6,17 @@ public class PlacementTile : MonoBehaviour
 {
     public Material defaultMaterial;
     public Material glowingMaterial;
+    new Renderer renderer;
+    public GameObject placedObject;
 
-
+    private void Start() {
+        renderer = GetComponent<Renderer>();
+        renderer.material = defaultMaterial;
+    }
     private void OnMouseOver() {
-        GetComponent<Renderer>().material = glowingMaterial;
+        renderer.material = glowingMaterial;
     }
     private void OnMouseExit() {
-        GetComponent<Renderer>().material = defaultMaterial;
+        renderer.material = defaultMaterial;
     }
 }
