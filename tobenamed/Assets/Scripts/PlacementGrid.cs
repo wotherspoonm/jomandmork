@@ -22,7 +22,9 @@ public class PlacementGrid : MonoBehaviour
                 Vector3 spawnPosition = new Vector3(x, y) * gridSpacing;
                 Quaternion spawnRotation = new();
                 Transform parent = transform;
-                tileArray[x,y] = Instantiate(tilePrefab, spawnPosition, spawnRotation, parent);
+                GameObject temp = Instantiate(tilePrefab, spawnPosition, spawnRotation, parent);
+                temp.transform.localScale = new Vector3(1,1)*gridSpacing + new Vector3(0,0,0.1f);
+                tileArray[x, y] = temp;
             }
         }
     }
