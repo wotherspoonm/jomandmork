@@ -7,7 +7,6 @@ public class PlacementTile : MonoBehaviour
     public Material defaultMaterial;
     public Material glowingMaterial;
 
-
     private void OnMouseOver() {
         GetComponent<Renderer>().material = glowingMaterial;
     }
