@@ -15,8 +15,7 @@ public class PlacementGrid : MonoBehaviour
     public const float gridSpacing = 2f;
 
     // Start is called before the first frame update
-    void Start()
-    {
+    void Start() {
         tileArray = new GameObject[gridSize.x, gridSize.y];
         for (int x = 0; x < gridSize.x; x++) {
             for(int y = 0; y < gridSize.y; y++) {
