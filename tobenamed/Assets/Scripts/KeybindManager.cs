@@ -2,12 +2,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class KeybindManager : MonoBehaviour
+public sealed class KeybindManager : MonoBehaviour
 {
+    private static readonly KeybindManager instance = new KeybindManager();
     Keybind place = new("placeKeybind", KeyCode.Mouse0);
     public KeyCode Place { get { return place.keyCode; } }
     Keybind delete = new("deleteKeybind", KeyCode.Mouse1);
     public KeyCode Delete { get { return delete.keyCode; } }
+
+    static KeybindManager()
+    {
+    }
+
+    private KeybindManager()
+    {
+    }
+
+    public static KeybindManager Instance{
+        get { return instance; }
+    }
 
     void Awake()
     {
