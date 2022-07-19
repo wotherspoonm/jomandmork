@@ -8,16 +8,25 @@ public class MenuItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     bool isHovered;
     public GameObject displayItem;
+    public SmoothVector rotation;
     Quaternion defaultRotation;
+    public Vector3 dispRotation;
+    public Vector3 dispTRotation;
     private void Start() {
         isHovered = false;
         defaultRotation = displayItem.transform.rotation;
+        rotation = new(defaultRotation.eulerAngles, 1, 1f, 0);
     }
 
     private void FixedUpdate() {
-        Vector3 spinSpeed = new(0, 0, 50f);
-        if (isHovered)
-        displayItem.transform.rotation = Quaternion.Euler(displayItem.transform.rotation.eulerAngles + spinSpeed * Time.fixedDeltaTime);
+        Vector3 spinSpeed = new(0, 0, 125f);
+        if (isHovered) {
+            rotation.TargetValue += Quaternion.Euler(spinSpeed * Time.fixedDeltaTime).eulerAngles;
+        }
+        rotation.TimeStep(Time.fixedDeltaTime);
+        dispRotation = rotation.Value;
+        dispTRotation = rotation.TargetValue;
+        displayItem.transform.rotation = Quaternion.Euler(rotation.Value);
     }
 
     public void OnPointerEnter(PointerEventData eventData) {
@@ -26,6 +35,6 @@ public class MenuItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     public void OnPointerExit(PointerEventData eventData) {
         isHovered = false;
-        displayItem.transform.rotation = defaultRotation;
+        rotation.TargetValue = defaultRotation.eulerAngles + rotation.Value - new Vector3((rotation.Value.x + 180) % 360 - 180, (rotation.Value.y + 180) % 360 - 180, (rotation.Value.z + 180) % 360 - 180);
     }
 }

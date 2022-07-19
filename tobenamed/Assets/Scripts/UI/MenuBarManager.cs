@@ -8,7 +8,7 @@ public class MenuBarManager : MonoBehaviour
     public GameObject menuBar;
     public GameObject ItemCellPrefab;
     public const float itemScale = 50;
-    public const float itemSeparation = 15;
+    public const float itemSeparation = 45;
     public const float menuBarHeight = 90;
     // Start is called before the first frame update
     void Start()
