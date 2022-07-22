@@ -5,7 +5,7 @@ using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class PlacementManager : MonoBehaviour
+public class PlacementManager
 {
     private PlacementMode mode;
     [CanBeNull] private GameObject selectedObject;
