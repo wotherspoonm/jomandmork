@@ -25,6 +25,11 @@ public class PlacementTile : MonoBehaviour
                 Vector3 spawnPosition = transform.position;
                 spawnPosition += new Vector3(0, 0, distanceFromGrid);
                 Quaternion spawnRotation = new();
+                GameObject? objectToPlace = PlacementManager.Instance.GetStoredObject();
+                if (objectToPlace == null)
+                {
+                    return;
+                }
                 placedObject = Instantiate(testPrefab, spawnPosition, spawnRotation);
                 objectPlaced = true;
             }
