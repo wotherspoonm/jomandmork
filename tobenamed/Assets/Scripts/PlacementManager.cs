@@ -8,7 +8,8 @@ using UnityEngine.UIElements;
 public class PlacementManager : MonoBehaviour
 {
     private PlacementMode mode;
-    private GameObject storedObject;
+    private GameObject selectedObject;
+    private GameObject movingObject;
     private static readonly PlacementManager instance = new PlacementManager();
 
     static PlacementManager()
@@ -26,31 +27,40 @@ public class PlacementManager : MonoBehaviour
 
     public void SetStoredObject(GameObject objectToStore, PlacementMode mode)
     {
-        switch (this.mode)
+        switch (mode)
         {
-            case PlacementMode.Moving:
-                this.storedObject = objectToStore;
-                break;
             case PlacementMode.Creating:
-            case PlacementMode.NoMode:
-                this.mode = mode;
-                this.storedObject = objectToStore;
+                selectedObject = objectToStore;
                 break;
-            default:
-                throw new SwitchExpressionException();
+            case PlacementMode.Moving:
+                movingObject = objectToStore;
+                break;
         }
+        this.mode = mode;
     }
 
     [CanBeNull]
-    public GameObject GetStoredObject()
+    public GameObject GetStoredObject(PlacementMode desiredMode)
     {
+        //Debug.Log("Current mode: " + this.mode);
+        //Debug.Log("Desired mode: " + desiredMode);
         switch (this.mode)
         {
             case PlacementMode.Moving:
+                if (desiredMode == PlacementMode.Creating)
+                {
+                    Debug.Log("In if loop");
+                    this.mode = desiredMode;
+                    return selectedObject;
+                }
                 this.mode = PlacementMode.NoMode;
-                return storedObject;
+                return movingObject;
             case PlacementMode.Creating:
-                return storedObject;
+                if (desiredMode == PlacementMode.Moving)
+                {
+                    return null;
+                }
+                return selectedObject;
             case PlacementMode.NoMode:
                 return null;
             default:
