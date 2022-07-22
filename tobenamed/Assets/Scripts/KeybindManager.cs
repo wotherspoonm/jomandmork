@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public sealed class KeybindManager : MonoBehaviour
+public sealed class KeybindManager
 {
     private static readonly KeybindManager instance = new KeybindManager();
     Keybind place = new("placeKeybind", KeyCode.Mouse0);
@@ -53,7 +53,7 @@ public sealed class KeybindManager : MonoBehaviour
 public struct Keybind {
     public Keybind(string name, KeyCode defaultKeyCode) {
         this.name = name;
-        this.keyCode = KeyCode.None;
+        this.keyCode = defaultKeyCode;
         this.defaultKeyCode = defaultKeyCode;
     }
     public string name;
