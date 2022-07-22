@@ -21,11 +21,9 @@ public class MenuItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     private void FixedUpdate() {
         Vector3 spinSpeed = new(0, 0, 125f);
         if (isHovered) {
-            rotation.TargetValue += Quaternion.Euler(spinSpeed * Time.fixedDeltaTime).eulerAngles;
+            rotation.TargetValue += spinSpeed * Time.fixedDeltaTime;
         }
         rotation.TimeStep(Time.fixedDeltaTime);
-        dispRotation = rotation.Value;
-        dispTRotation = rotation.TargetValue;
         displayItem.transform.rotation = Quaternion.Euler(rotation.Value);
     }
 
