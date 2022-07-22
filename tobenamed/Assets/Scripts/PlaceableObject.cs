@@ -7,6 +7,7 @@ public abstract class PlaceableObject : MonoBehaviour
 {
     public Material material;
     public Material selectedMaterial;
+    public float menuPreviewSize;
 
     public void Select() {
         gameObject.GetComponent<Renderer>().material = selectedMaterial;

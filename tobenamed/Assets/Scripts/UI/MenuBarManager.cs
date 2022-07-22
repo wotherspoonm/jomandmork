@@ -27,6 +27,7 @@ public class MenuBarManager : MonoBehaviour
             var newCell = Instantiate(itemCellPrefab, menuBar.transform);
             newCell.GetComponent<RectTransform>().anchoredPosition3D = new Vector3(i * (itemSeparation + itemScale) + 0.5f * itemScale + itemSeparation, 0, -itemScale);
             newCell.GetComponent<MenuItem>().displayItem = Instantiate(menuItems[i], newCell.transform);
+            newCell.GetComponent<MenuItem>().displayItem.transform.localScale = Vector3.one * newCell.GetComponent<MenuItem>().displayItem.GetComponent<PlaceableObject>().menuPreviewSize;
             itemCells.Add(newCell);
         }
         SetButtonClickDelegates();
