@@ -8,8 +8,9 @@ using UnityEngine.UIElements;
 public class PlacementManager : MonoBehaviour
 {
     private PlacementMode mode;
-    private GameObject selectedObject;
-    private GameObject movingObject;
+    [CanBeNull] private GameObject selectedObject;
+    [CanBeNull] private GameObject movingObject;
+    private PlacementTile parentOfMovingObject;
     private static readonly PlacementManager instance = new PlacementManager();
 
     static PlacementManager()
@@ -25,36 +26,45 @@ public class PlacementManager : MonoBehaviour
         get { return instance; }
     }
 
-    public void SetStoredObject(GameObject objectToStore, PlacementMode mode)
+    public void SetSelectedObject(GameObject objectToStore, PlacementMode mode)
     {
-        switch (mode)
-        {
-            case PlacementMode.Creating:
-                selectedObject = objectToStore;
-                break;
-            case PlacementMode.Moving:
-                movingObject = objectToStore;
-                break;
-        }
+        this.selectedObject = objectToStore;
         this.mode = mode;
+    }
+
+    public void SetMovingObject(GameObject objectToStore, PlacementMode mode, PlacementTile parentOfMovingObject)
+    {
+        this.movingObject = objectToStore;
+        this.mode = mode;
+        this.parentOfMovingObject = parentOfMovingObject;
     }
 
     [CanBeNull]
     public GameObject GetStoredObject(PlacementMode desiredMode)
     {
-        //Debug.Log("Current mode: " + this.mode);
-        //Debug.Log("Desired mode: " + desiredMode);
         switch (this.mode)
         {
             case PlacementMode.Moving:
                 if (desiredMode == PlacementMode.Creating)
                 {
-                    Debug.Log("In if loop");
-                    this.mode = desiredMode;
+                    this.mode = PlacementMode.Creating;
                     return selectedObject;
                 }
-                this.mode = PlacementMode.NoMode;
-                return movingObject;
+                else if (desiredMode == PlacementMode.Moving)
+                {
+                    if (selectedObject != null)
+                    {
+                        this.mode = PlacementMode.Creating; // return to placement mode if there is an object selected
+                    }
+                    else
+                    {
+                        this.mode = PlacementMode.NoMode;
+                    }
+
+                    parentOfMovingObject.objectPlaced = false;
+                    return movingObject;
+                }
+                return null;
             case PlacementMode.Creating:
                 if (desiredMode == PlacementMode.Moving)
                 {

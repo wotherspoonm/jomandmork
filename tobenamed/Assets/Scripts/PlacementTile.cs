@@ -10,7 +10,8 @@ public class PlacementTile : MonoBehaviour
     public Material defaultMaterial;
     public Material glowingMaterial;
     new Renderer renderer;
-    private bool objectPlaced = false;
+    public bool objectPlaced = false;
+    private bool selectedToMove = false;
     private float distanceFromGrid = 2f;
     public GameObject placedObject;
     [CanBeNull] private GameObject objectToPlace;
@@ -34,9 +35,8 @@ public class PlacementTile : MonoBehaviour
             }
         }
         else if (Input.GetKeyDown(KeyCode.Mouse2)) {
-            if (objectPlaced) {
-                PlacementManager.Instance.SetStoredObject(placedObject, PlacementMode.Moving);
-                objectPlaced = false;
+            if (objectPlaced && !selectedToMove) {
+                PlacementManager.Instance.SetMovingObject(placedObject,PlacementMode.Moving,this);
             }
             else {
                 placeObject(true, PlacementMode.Moving);
