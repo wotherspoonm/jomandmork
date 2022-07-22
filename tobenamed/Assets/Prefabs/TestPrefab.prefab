@@ -110,4 +110,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c09d3e117e1fe574f9f3c50d0fa4cc42, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  position: {x: 0, y: 0}
+  material: {fileID: 2100000, guid: 051e9361acc3b7141a4bb7d87addd762, type: 2}
+  selectedMaterial: {fileID: 2100000, guid: 0ae2f5ea5385a9249bda337b58c11f28, type: 2}
+  menuPreviewSize: 50
