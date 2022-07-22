@@ -40,7 +40,7 @@ public class PlacementManager
     }
 
     [CanBeNull]
-    public GameObject GetStoredObject(PlacementMode desiredMode)
+    public GameObject GetStoredObjectAndUpdate(PlacementMode desiredMode)
     {
         switch (this.mode)
         {
@@ -75,6 +75,20 @@ public class PlacementManager
                 return null;
             default:
                 throw new SwitchExpressionException();
+        }
+    }
+
+    [CanBeNull]
+    public GameObject GetStoredObject()
+    {
+        switch (mode)
+        {
+            case PlacementMode.Creating:
+                return selectedObject;
+            case PlacementMode.Moving:
+                return movingObject;
+            default:
+                return null;
         }
     }
 }

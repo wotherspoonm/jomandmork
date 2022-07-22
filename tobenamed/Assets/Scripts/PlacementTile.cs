@@ -11,8 +11,8 @@ public class PlacementTile : MonoBehaviour
     public Material glowingMaterial;
     new Renderer renderer;
     public bool objectPlaced = false;
-    private bool selectedToMove = false;
     private float distanceFromGrid = 2f;
+    public GameObject ghostObject;
     public GameObject placedObject;
     [CanBeNull] private GameObject objectToPlace;
 
@@ -25,7 +25,12 @@ public class PlacementTile : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Mouse0)) // needs to change when KeybindManager is fixed
         {
             if (!objectPlaced) {
-                placeObject(false, PlacementMode.Creating);
+                objectToPlace = PlacementManager.Instance.GetStoredObjectAndUpdate(PlacementMode.Creating);
+                if (objectToPlace != null)
+                {
+                    placedObject = createObject();
+                    objectPlaced = true;
+                }
             }
         }
         else if (Input.GetKeyDown(KeyCode.Mouse1)) {
@@ -35,31 +40,47 @@ public class PlacementTile : MonoBehaviour
             }
         }
         else if (Input.GetKeyDown(KeyCode.Mouse2)) {
-            if (objectPlaced && !selectedToMove) {
+            if (objectPlaced) {
                 PlacementManager.Instance.SetMovingObject(placedObject,PlacementMode.Moving,this);
             }
             else {
-                placeObject(true, PlacementMode.Moving);
+                objectToPlace = PlacementManager.Instance.GetStoredObjectAndUpdate(PlacementMode.Moving);
+                if (objectToPlace != null)
+                {
+                    placedObject = createObject();
+                    Destroy(objectToPlace);
+                    objectPlaced = true;
+                }
             }
+        }
+    }
+
+    private void OnMouseEnter()
+    {
+        if (!objectPlaced)
+        {
+            objectToPlace = PlacementManager.Instance.GetStoredObject();
+            ghostObject = createObject();
+            Renderer renderer = ghostObject.GetComponent<Renderer>();
+            renderer.material = defaultMaterial;
         }
     }
     private void OnMouseExit() {
         renderer.material = defaultMaterial;
+        Destroy(ghostObject);
     }
-    private void placeObject(bool destroyObject, PlacementMode desiredMode)
+    private GameObject createObject()
     {
+        GameObject result;
         Vector3 spawnPosition = transform.position;
         spawnPosition += new Vector3(0, 0, distanceFromGrid);
         Quaternion spawnRotation = new();
-        objectToPlace = PlacementManager.Instance.GetStoredObject(desiredMode);
         if (objectToPlace != null) {
-            placedObject = Instantiate(objectToPlace, spawnPosition, spawnRotation);
-            objectPlaced = true;
+            result = Instantiate(objectToPlace, spawnPosition, spawnRotation);
+            return result;
         }
 
-        if (destroyObject)
-        {
-            Destroy(objectToPlace);
-        }
+        return null;
+
     }
 }
