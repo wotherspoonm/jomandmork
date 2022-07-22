@@ -29,7 +29,8 @@ public class PlacementManager : MonoBehaviour
         switch (this.mode)
         {
             case PlacementMode.Moving:
-                return;
+                this.storedObject = objectToStore;
+                break;
             case PlacementMode.Creating:
             case PlacementMode.NoMode:
                 this.mode = mode;

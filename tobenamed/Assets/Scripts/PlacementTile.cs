@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -11,7 +12,7 @@ public class PlacementTile : MonoBehaviour
     private bool objectPlaced = false;
     private float distanceFromGrid = 2f;
     public GameObject placedObject;
-    public GameObject testPrefab;
+    [CanBeNull] private GameObject objectToPlace;
 
     private void Start() {
         renderer = GetComponent<Renderer>();
@@ -25,12 +26,12 @@ public class PlacementTile : MonoBehaviour
                 Vector3 spawnPosition = transform.position;
                 spawnPosition += new Vector3(0, 0, distanceFromGrid);
                 Quaternion spawnRotation = new();
-                GameObject? objectToPlace = PlacementManager.Instance.GetStoredObject();
+                objectToPlace = PlacementManager.Instance.GetStoredObject();
                 if (objectToPlace == null)
                 {
                     return;
                 }
-                placedObject = Instantiate(testPrefab, spawnPosition, spawnRotation);
+                placedObject = Instantiate(objectToPlace, spawnPosition, spawnRotation);
                 objectPlaced = true;
             }
         }

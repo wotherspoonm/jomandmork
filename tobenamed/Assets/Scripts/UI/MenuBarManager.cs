@@ -41,7 +41,7 @@ public class MenuBarManager : MonoBehaviour
         }
     }
     /// <summary>
-    /// Sellects the item at the given index, and deselects 
+    /// Selects the item at the given index, and deselects all others 
     /// </summary>
     /// <param name="index"></param>
     void SelectItem(int index) {
@@ -57,6 +57,7 @@ public class MenuBarManager : MonoBehaviour
                 if (i == index) continue;
                 itemCells[i].GetComponent<MenuItem>().DeselectItem();
             }
+            PlacementManager.Instance.SetStoredObject(SelectedItem,PlacementMode.Creating);
         }
     }
 
