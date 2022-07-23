@@ -60,9 +60,11 @@ public class PlacementTile : MonoBehaviour
         if (!objectPlaced)
         {
             objectToPlace = PlacementManager.Instance.GetStoredObject();
-            ghostObject = createObject();
-            Renderer renderer = ghostObject.GetComponent<Renderer>();
-            renderer.material = defaultMaterial;
+            if (objectToPlace != null) {
+                ghostObject = createObject();
+                Renderer renderer = ghostObject.GetComponent<Renderer>();
+                renderer.material = defaultMaterial;
+            }
         }
     }
     private void OnMouseExit() {
