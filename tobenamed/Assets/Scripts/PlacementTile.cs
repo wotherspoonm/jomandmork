@@ -28,7 +28,7 @@ public class PlacementTile : MonoBehaviour
                 objectToPlace = PlacementManager.Instance.GetStoredObjectAndUpdate(PlacementMode.Creating);
                 if (objectToPlace != null)
                 {
-                    placedObject = createObject();
+                    placedObject = CreateObject();
                     objectPlaced = true;
                 }
             }
@@ -47,7 +47,7 @@ public class PlacementTile : MonoBehaviour
                 objectToPlace = PlacementManager.Instance.GetStoredObjectAndUpdate(PlacementMode.Moving);
                 if (objectToPlace != null)
                 {
-                    placedObject = createObject();
+                    placedObject = CreateObject();
                     Destroy(objectToPlace);
                     objectPlaced = true;
                 }
@@ -61,7 +61,7 @@ public class PlacementTile : MonoBehaviour
         {
             objectToPlace = PlacementManager.Instance.GetStoredObject();
             if (objectToPlace != null) {
-                ghostObject = createObject();
+                ghostObject = CreateObject();
                 Renderer renderer = ghostObject.GetComponent<Renderer>();
                 renderer.material = defaultMaterial;
             }
@@ -71,7 +71,7 @@ public class PlacementTile : MonoBehaviour
         renderer.material = defaultMaterial;
         Destroy(ghostObject);
     }
-    private GameObject createObject()
+    private GameObject CreateObject()
     {
         GameObject result;
         Vector3 spawnPosition = transform.position;
