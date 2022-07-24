@@ -24,8 +24,9 @@ public class PlacementTile : MonoBehaviour
         renderer.material = glowingMaterial;
         if (Input.GetKeyDown(KeyCode.Mouse0)) // needs to change when KeybindManager is fixed
         {
-            if (!objectPlaced) {
-                objectToPlace = PlacementManager.Instance.GetStoredObjectAndUpdate(PlacementMode.Creating);
+            if (!objectPlaced && PlacementManager.Instance.mode == PlacementMode.Create)
+            {
+                objectToPlace = PlacementManager.Instance.GetStoredObject();
                 if (objectToPlace != null)
                 {
                     placedObject = CreateObject();
@@ -41,18 +42,23 @@ public class PlacementTile : MonoBehaviour
         }
         else if (Input.GetKeyDown(KeyCode.Mouse2)) {
             if (objectPlaced) {
-                PlacementManager.Instance.SetMovingObject(placedObject,PlacementMode.Moving,this);
+                PlacementManager.Instance.TransitionToMove(placedObject,this);
             }
-            else {
-                objectToPlace = PlacementManager.Instance.GetStoredObjectAndUpdate(PlacementMode.Moving);
-                if (objectToPlace != null)
+            else
+            {
+                if (PlacementManager.Instance.mode == PlacementMode.Move)
                 {
-                    placedObject = CreateObject();
-                    Destroy(objectToPlace);
-                    objectPlaced = true;
+                    objectToPlace = PlacementManager.Instance.GetStoredObject();
+                    PlacementManager.Instance.TransitionToNoMode();
+                    if (objectToPlace != null) {
+                        placedObject = CreateObject();
+                        Destroy(objectToPlace);
+                        objectPlaced = true;
+                    }
                 }
             }
         }
+        PlacementManager.Instance.MoveObject();
     }
 
     private void OnMouseEnter()

@@ -4,13 +4,16 @@ using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UIElements;
+using System;
 
 public class PlacementManager
 {
-    private PlacementMode mode;
-    [CanBeNull] private GameObject selectedObject;
-    [CanBeNull] private GameObject movingObject;
-    private PlacementTile parentOfMovingObject;
+    public PlacementMode mode;
+    [CanBeNull] private GameObject storedObject;
+    private Vector3 storedObjectOriginalPosition;
+    private PlacementTile parentOfStoredObject;
+    private Vector3 screenPosition;
+    private Vector3 worldPosition;
     private static readonly PlacementManager instance = new PlacementManager();
 
     static PlacementManager()
@@ -19,6 +22,7 @@ public class PlacementManager
 
     private PlacementManager()
     {
+
     }
 
     public static PlacementManager Instance
@@ -26,69 +30,61 @@ public class PlacementManager
         get { return instance; }
     }
 
-    public void SetSelectedObject(GameObject objectToStore, PlacementMode mode)
+    public void MoveObject()
     {
-        this.selectedObject = objectToStore;
-        this.mode = mode;
-    }
-
-    public void SetMovingObject(GameObject objectToStore, PlacementMode mode, PlacementTile parentOfMovingObject)
-    {
-        this.movingObject = objectToStore;
-        this.mode = mode;
-        this.parentOfMovingObject = parentOfMovingObject;
-    }
-
-    [CanBeNull]
-    public GameObject GetStoredObjectAndUpdate(PlacementMode desiredMode)
-    {
-        switch (this.mode)
+        if (mode == PlacementMode.Move && storedObject != null)
         {
-            case PlacementMode.Moving:
-                if (desiredMode == PlacementMode.Creating)
-                {
-                    this.mode = PlacementMode.Creating;
-                    return selectedObject;
-                }
-                else if (desiredMode == PlacementMode.Moving)
-                {
-                    if (selectedObject != null)
-                    {
-                        this.mode = PlacementMode.Creating; // return to placement mode if there is an object selected
-                    }
-                    else
-                    {
-                        this.mode = PlacementMode.NoMode;
-                    }
-
-                    parentOfMovingObject.objectPlaced = false;
-                    return movingObject;
-                }
-                return null;
-            case PlacementMode.Creating:
-                if (desiredMode == PlacementMode.Moving)
-                {
-                    return null;
-                }
-                return selectedObject;
-            case PlacementMode.NoMode:
-                return null;
-            default:
-                throw new SwitchExpressionException();
+            screenPosition = Input.mousePosition;
+            Ray ray = Camera.main.ScreenPointToRay(screenPosition);
+            RaycastHit hitData;
+            if (Physics.Raycast(ray, out hitData))
+            {
+                worldPosition = hitData.point;
+            }
+            worldPosition.z = storedObject.transform.position.z;
+            storedObject.transform.position = worldPosition;
         }
     }
 
-    [CanBeNull]
-    public GameObject GetStoredObject()
+    public void StateLeave()
     {
         switch (mode)
         {
-            case PlacementMode.Creating:
-                return selectedObject;
-            case PlacementMode.Moving:
-                return movingObject;
-            default:
-                return null;
+            case PlacementMode.Create:
+                //Deselect item
+                break;
+            case PlacementMode.Move:
+                storedObject.transform.position = storedObjectOriginalPosition;
+                break;
+            case PlacementMode.NoMode:
+                break;
         }
+    }
+
+    public void TransitionToCreate(GameObject objectToStore)
+    {
+        StateLeave();
+        storedObject = objectToStore;
+        mode = PlacementMode.Create;
+    }
+
+    public void TransitionToMove(GameObject objectToStore, PlacementTile parentOfObjectToStore)
+    {
+        StateLeave();
+        storedObject = objectToStore;
+        parentOfStoredObject = parentOfObjectToStore;
+        storedObjectOriginalPosition = objectToStore.transform.position;
+        mode = PlacementMode.Move;
+    }
+
+    public void TransitionToNoMode()
+    {
+        StateLeave();
+        mode = PlacementMode.NoMode;
+    }
+
+    [CanBeNull]
+    public GameObject GetStoredObject() {
+        return storedObject;
     }
 }

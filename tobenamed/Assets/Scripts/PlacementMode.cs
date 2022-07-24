@@ -1,6 +1,6 @@
 public enum PlacementMode
 {
-    Creating,
-    Moving,
+    Create,
+    Move,
     NoMode
 }

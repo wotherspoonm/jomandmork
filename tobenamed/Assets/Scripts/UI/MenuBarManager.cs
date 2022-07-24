@@ -49,7 +49,7 @@ public class MenuBarManager : MonoBehaviour
         if (index == selectedItemIndex && itemIsSelected) {
             itemCells[index].GetComponent<MenuItem>().DeselectItem();
             itemIsSelected = false;
-            PlacementManager.Instance.SetSelectedObject(SelectedItem, PlacementMode.NoMode);
+            PlacementManager.Instance.TransitionToNoMode();
         }
         else {
             selectedItemIndex = index;
@@ -59,7 +59,7 @@ public class MenuBarManager : MonoBehaviour
                 if (i == index) continue;
                 itemCells[i].GetComponent<MenuItem>().DeselectItem();
             }
-            PlacementManager.Instance.SetSelectedObject(SelectedItem,PlacementMode.Creating);
+            PlacementManager.Instance.TransitionToCreate(SelectedItem);
         }
     }
 
