@@ -83,8 +83,13 @@ public class PlacementTile : MonoBehaviour
         Vector3 spawnPosition = transform.position;
         spawnPosition += new Vector3(0, 0, distanceFromGrid);
         Quaternion spawnRotation = new();
-        if (objectToPlace != null) {
+        if (objectToPlace != null)
+        {
+            Transform objectParent = objectToPlace.transform.parent;
+            objectToPlace.transform.SetParent(null,true);
             GameObject result = Instantiate(objectToPlace, spawnPosition, spawnRotation);
+            objectToPlace.transform.SetParent(objectParent,true);
+            result.transform.SetParent(transform,true);
             return result;
         }
 

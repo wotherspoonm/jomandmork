@@ -54,6 +54,7 @@ public class PlacementManager
                 break;
             case PlacementMode.Move:
                 storedObject.transform.position = storedObjectOriginalPosition;
+                storedObject.transform.parent.transform.gameObject.GetComponent<PlacementTile>().objectPlaced = false;
                 break;
             case PlacementMode.NoMode:
                 break;
