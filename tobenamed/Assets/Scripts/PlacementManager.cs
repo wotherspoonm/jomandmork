@@ -11,7 +11,6 @@ public class PlacementManager
     public PlacementMode mode;
     [CanBeNull] private GameObject storedObject;
     private Vector3 storedObjectOriginalPosition;
-    private PlacementTile parentOfStoredObject;
     private Vector3 screenPosition;
     private Vector3 worldPosition;
     private static readonly PlacementManager instance = new PlacementManager();
@@ -68,11 +67,10 @@ public class PlacementManager
         mode = PlacementMode.Create;
     }
 
-    public void TransitionToMove(GameObject objectToStore, PlacementTile parentOfObjectToStore)
+    public void TransitionToMove(GameObject objectToStore)
     {
         StateLeave();
         storedObject = objectToStore;
-        parentOfStoredObject = parentOfObjectToStore;
         storedObjectOriginalPosition = objectToStore.transform.position;
         mode = PlacementMode.Move;
     }

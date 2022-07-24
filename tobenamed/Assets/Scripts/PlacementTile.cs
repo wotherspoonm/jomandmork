@@ -42,7 +42,8 @@ public class PlacementTile : MonoBehaviour
         }
         else if (Input.GetKeyDown(KeyCode.Mouse2)) {
             if (objectPlaced) {
-                PlacementManager.Instance.TransitionToMove(placedObject,this);
+                PlacementManager.Instance.TransitionToMove(placedObject);
+                objectPlaced = false;
             }
             else
             {
@@ -79,12 +80,11 @@ public class PlacementTile : MonoBehaviour
     }
     private GameObject CreateObject()
     {
-        GameObject result;
         Vector3 spawnPosition = transform.position;
         spawnPosition += new Vector3(0, 0, distanceFromGrid);
         Quaternion spawnRotation = new();
         if (objectToPlace != null) {
-            result = Instantiate(objectToPlace, spawnPosition, spawnRotation);
+            GameObject result = Instantiate(objectToPlace, spawnPosition, spawnRotation);
             return result;
         }
 
