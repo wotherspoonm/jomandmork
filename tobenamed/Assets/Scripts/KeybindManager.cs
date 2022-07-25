@@ -40,7 +40,6 @@ public sealed class KeybindManager: MonoBehaviour
     /// <param name="keybind"></param>
     /// <param name="newKeyCode"></param>
     public void SetKeybind(Keybind keybind, KeyCode newKeyCode) {
-        Debug.Log($"Changed keycode of {keybind.name} from {keybind.keyCode} to {newKeyCode}");
         keybind.keyCode = newKeyCode;
         PlayerPrefs.SetString(keybind.name, newKeyCode.ToString());
     }
