@@ -58,13 +58,11 @@ public class MenuBarManager : MonoBehaviour
     /// <param name="index"></param>
     void SelectItem(int index) {
         if (index == selectedItemIndex && itemIsSelected) {
-            Debug.Log("We the same");
             itemCells[index].GetComponent<MenuItem>().DeselectItem();
             itemIsSelected = false;
             PlacementManager.Instance.TransitionToNoMode();
         }
         else {
-            Debug.Log("We not the same");
             selectedItemIndex = index;
             PlacementManager.Instance.TransitionToCreate(SelectedItem);
             itemIsSelected = true;
@@ -86,6 +84,6 @@ public class MenuBarManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(selectedItemIndex);
+
     }
 }
