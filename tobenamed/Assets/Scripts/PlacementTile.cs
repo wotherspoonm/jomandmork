@@ -22,7 +22,7 @@ public class PlacementTile : MonoBehaviour
     }
     private void OnMouseOver() {
         renderer.material = glowingMaterial;
-        if (Input.GetKeyDown(KeyCode.Mouse0)) // needs to change when KeybindManager is fixed
+        if (Input.GetKeyDown(KeybindManager.Instance.Place)) // needs to change when KeybindManager is fixed
         {
             if (!objectPlaced && PlacementManager.Instance.mode == PlacementMode.Create)
             {
@@ -31,13 +31,13 @@ public class PlacementTile : MonoBehaviour
                 objectPlaced = true;
             }
         }
-        else if (Input.GetKeyDown(KeyCode.Mouse1)) {
+        else if (Input.GetKeyDown(KeybindManager.Instance.Delete)) {
             if (objectPlaced) {
                 Destroy(placedObject);
                 objectPlaced = false;
             }
         }
-        else if (Input.GetKeyDown(KeyCode.Mouse2)) {
+        else if (Input.GetKeyDown(KeybindManager.Instance.Move)) {
             if (objectPlaced) {
                 PlacementManager.Instance.TransitionToMove(placedObject);
                 objectPlaced = false;
