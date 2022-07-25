@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -57,14 +58,16 @@ public class MenuBarManager : MonoBehaviour
     /// <param name="index"></param>
     void SelectItem(int index) {
         if (index == selectedItemIndex && itemIsSelected) {
+            Debug.Log("We the same");
             itemCells[index].GetComponent<MenuItem>().DeselectItem();
             itemIsSelected = false;
             PlacementManager.Instance.TransitionToNoMode();
         }
         else {
+            Debug.Log("We not the same");
             selectedItemIndex = index;
-            itemIsSelected = true;
             PlacementManager.Instance.TransitionToCreate(SelectedItem);
+            itemIsSelected = true;
             itemCells[index].GetComponent<MenuItem>().SelectItem();
             for (int i = 0; i < itemCells.Count; i++) {
                 if (i == index) continue;
@@ -77,13 +80,12 @@ public class MenuBarManager : MonoBehaviour
         if (itemIsSelected) {
             itemCells[selectedItemIndex].GetComponent<MenuItem>().DeselectItem();
             itemIsSelected = false;
-            PlacementManager.Instance.TransitionToNoMode();
         }
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        Debug.Log(selectedItemIndex);
     }
 }
