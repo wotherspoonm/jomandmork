@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -16,15 +17,18 @@ public class MenuBarManager : MonoBehaviour
     private bool itemIsSelected = false;
     public GameObject SelectedItem { get { return menuItems[selectedItemIndex]; } }
     private static MenuBarManager instance;
-    public MenuBarManager Instance { get { return instance; } }
+    public static MenuBarManager Instance { get { return instance; } }
 
+    private void Awake()
+    {
+        // Singleton setup
+        if (instance == null) {
+            instance = this;
+        }
+    }
     // Start is called before the first frame update
     void Start()
     {
-        // Singleton setup
-        if(instance == null) {
-            instance = this;
-        }
         // Set menu bar size  and position based on the number of items
         var menuRectTransform = menuBar.GetComponent<RectTransform>();
         menuRectTransform.sizeDelta = new Vector2((itemSeparation + itemScale) * (menuItems.Count) + itemSeparation, menuBarHeight);
@@ -54,33 +58,34 @@ public class MenuBarManager : MonoBehaviour
     /// <param name="index"></param>
     void SelectItem(int index) {
         if (index == selectedItemIndex && itemIsSelected) {
+            Debug.Log("We the same");
             itemCells[index].GetComponent<MenuItem>().DeselectItem();
             itemIsSelected = false;
             PlacementManager.Instance.TransitionToNoMode();
         }
         else {
+            Debug.Log("We not the same");
             selectedItemIndex = index;
+            PlacementManager.Instance.TransitionToCreate(SelectedItem);
             itemIsSelected = true;
             itemCells[index].GetComponent<MenuItem>().SelectItem();
             for (int i = 0; i < itemCells.Count; i++) {
                 if (i == index) continue;
                 itemCells[i].GetComponent<MenuItem>().DeselectItem();
             }
-            PlacementManager.Instance.TransitionToCreate(SelectedItem);
         }
     }
 
-    void DeselectAll() {
+    public void DeselectAll() {
         if (itemIsSelected) {
             itemCells[selectedItemIndex].GetComponent<MenuItem>().DeselectItem();
             itemIsSelected = false;
-            PlacementManager.Instance.TransitionToNoMode();
         }
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        Debug.Log(selectedItemIndex);
     }
 }

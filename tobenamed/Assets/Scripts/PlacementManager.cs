@@ -21,7 +21,7 @@ public class PlacementManager
 
     private PlacementManager()
     {
-
+        mode = PlacementMode.NoMode;
     }
 
     public static PlacementManager Instance
@@ -49,7 +49,8 @@ public class PlacementManager
         switch (mode)
         {
             case PlacementMode.Create:
-                //Deselect item
+                MenuBarManager.Instance.DeselectAll();
+                storedObject = null;
                 break;
             case PlacementMode.Move:
                 storedObject.transform.position = storedObjectOriginalPosition;
