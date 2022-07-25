@@ -5,11 +5,11 @@ using UnityEngine;
 public sealed class KeybindManager: MonoBehaviour
 {
     private static KeybindManager instance;
-    Keybind place = new("placeKeybind", KeyCode.Mouse0);
+    public readonly Keybind place = new("placeKeybind", KeyCode.Mouse0);
     public KeyCode Place { get { return place.keyCode; } }
-    Keybind delete = new("deleteKeybind", KeyCode.Mouse1);
+    public readonly Keybind delete = new("deleteKeybind", KeyCode.Mouse1);
     public KeyCode Delete { get { return delete.keyCode; } }
-    Keybind move = new("moveKeybind", KeyCode.Mouse2);
+    public readonly Keybind move = new("moveKeybind", KeyCode.Mouse2);
     public KeyCode Move { get { return move.keyCode; } }
 
     private void Awake() {
@@ -40,6 +40,7 @@ public sealed class KeybindManager: MonoBehaviour
     /// <param name="keybind"></param>
     /// <param name="newKeyCode"></param>
     public void SetKeybind(Keybind keybind, KeyCode newKeyCode) {
+        Debug.Log($"Changed keycode of {keybind.name} from {keybind.keyCode} to {newKeyCode}");
         keybind.keyCode = newKeyCode;
         PlayerPrefs.SetString(keybind.name, newKeyCode.ToString());
     }
@@ -47,7 +48,7 @@ public sealed class KeybindManager: MonoBehaviour
 /// <summary>
 /// Stores the name under which the keybind is stored as well its value and default value.
 /// </summary>
-public struct Keybind {
+public class Keybind {
     public Keybind(string name, KeyCode defaultKeyCode) {
         this.name = name;
         this.keyCode = defaultKeyCode;
