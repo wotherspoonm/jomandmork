@@ -2,30 +2,27 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public sealed class KeybindManager
+public sealed class KeybindManager: MonoBehaviour
 {
-    private static readonly KeybindManager instance = new KeybindManager();
+    private static KeybindManager instance;
     Keybind place = new("placeKeybind", KeyCode.Mouse0);
     public KeyCode Place { get { return place.keyCode; } }
     Keybind delete = new("deleteKeybind", KeyCode.Mouse1);
     public KeyCode Delete { get { return delete.keyCode; } }
+    Keybind move = new("moveKeybind", KeyCode.Mouse2);
+    public KeyCode Move { get { return move.keyCode; } }
 
-    static KeybindManager()
-    {
-    }
-
-    private KeybindManager()
-    {
+    private void Awake() {
+        if(instance == null) {
+            instance = this;
+        }
+        LoadKeybinds();
     }
 
     public static KeybindManager Instance{
         get { return instance; }
     }
 
-    void Awake()
-    {
-        LoadKeybinds();
-    }
     /// <summary>
     /// Loads the keybinds from PlayerPrefs.
     /// </summary>
