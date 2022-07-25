@@ -63,6 +63,14 @@ public class MenuBarManager : MonoBehaviour
         }
     }
 
+    void DeselectAll() {
+        if (itemIsSelected) {
+            itemCells[selectedItemIndex].GetComponent<MenuItem>().DeselectItem();
+            itemIsSelected = false;
+            PlacementManager.Instance.TransitionToNoMode();
+        }
+    }
+
     // Update is called once per frame
     void Update()
     {
