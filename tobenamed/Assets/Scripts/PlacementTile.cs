@@ -27,11 +27,8 @@ public class PlacementTile : MonoBehaviour
             if (!objectPlaced && PlacementManager.Instance.mode == PlacementMode.Create)
             {
                 objectToPlace = PlacementManager.Instance.GetStoredObject();
-                if (objectToPlace != null)
-                {
-                    placedObject = CreateObject();
-                    objectPlaced = true;
-                }
+                placedObject = CreateObject();
+                objectPlaced = true;
             }
         }
         else if (Input.GetKeyDown(KeyCode.Mouse1)) {
@@ -51,11 +48,10 @@ public class PlacementTile : MonoBehaviour
                 {
                     objectToPlace = PlacementManager.Instance.GetStoredObject();
                     PlacementManager.Instance.TransitionToNoMode();
-                    if (objectToPlace != null) {
-                        placedObject = CreateObject();
-                        Destroy(objectToPlace);
-                        objectPlaced = true;
-                    }
+                    objectToPlace.transform.parent.transform.gameObject.GetComponent<PlacementTile>().objectPlaced = false;
+                    placedObject = CreateObject();
+                    Destroy(objectToPlace);
+                    objectPlaced = true;
                 }
             }
         }

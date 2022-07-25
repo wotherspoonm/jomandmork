@@ -35,8 +35,7 @@ public class PlacementManager
         {
             screenPosition = Input.mousePosition;
             Ray ray = Camera.main.ScreenPointToRay(screenPosition);
-            RaycastHit hitData;
-            if (Physics.Raycast(ray, out hitData))
+            if (Physics.Raycast(ray, out RaycastHit hitData))
             {
                 worldPosition = hitData.point;
             }
@@ -54,7 +53,7 @@ public class PlacementManager
                 break;
             case PlacementMode.Move:
                 storedObject.transform.position = storedObjectOriginalPosition;
-                storedObject.transform.parent.transform.gameObject.GetComponent<PlacementTile>().objectPlaced = false;
+                storedObject.transform.parent.transform.gameObject.GetComponent<PlacementTile>().objectPlaced = true;
                 break;
             case PlacementMode.NoMode:
                 break;
