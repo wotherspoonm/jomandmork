@@ -29,6 +29,7 @@ public class MenuItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     }
     public void DeselectItem() {
         isSelected = false;
+        if(!isSelected) rotation.TargetValue = defaultRotation.eulerAngles + rotation.Value - new Vector3((rotation.Value.x - defaultRotation.eulerAngles.x + 180) % 360 - 180 +defaultRotation.eulerAngles.x, (rotation.Value.y - defaultRotation.eulerAngles.y + 180) % 360 - 180 + defaultRotation.eulerAngles.y, (rotation.Value.z + defaultRotation.eulerAngles.z - 180) % 360 - 180 + defaultRotation.eulerAngles.z);
         displayItemPO.Deselect();
     }
 
@@ -47,6 +48,6 @@ public class MenuItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     public void OnPointerExit(PointerEventData eventData) {
         isHovered = false;
-        if(!isSelected) rotation.TargetValue = defaultRotation.eulerAngles + rotation.Value - new Vector3((rotation.Value.x - defaultRotation.eulerAngles.x + 180) % 360 - 180 +defaultRotation.eulerAngles.x, (rotation.Value.y - defaultRotation.eulerAngles.y + 180) % 360 - 180 + defaultRotation.eulerAngles.y, (rotation.Value.z + defaultRotation.eulerAngles.z - 180) % 360 - 180 + defaultRotation.eulerAngles.z);
+        if (!isSelected) rotation.TargetValue = defaultRotation.eulerAngles + rotation.Value - new Vector3((rotation.Value.x - defaultRotation.eulerAngles.x + 180) % 360 - 180 + defaultRotation.eulerAngles.x, (rotation.Value.y - defaultRotation.eulerAngles.y + 180) % 360 - 180 + defaultRotation.eulerAngles.y, (rotation.Value.z + defaultRotation.eulerAngles.z - 180) % 360 - 180 + defaultRotation.eulerAngles.z);
     }
 }

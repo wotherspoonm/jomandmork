@@ -16,15 +16,18 @@ public class MenuBarManager : MonoBehaviour
     private bool itemIsSelected = false;
     public GameObject SelectedItem { get { return menuItems[selectedItemIndex]; } }
     private static MenuBarManager instance;
-    public MenuBarManager Instance { get { return instance; } }
+    public static MenuBarManager Instance { get { return instance; } }
 
+    private void Awake()
+    {
+        // Singleton setup
+        if (instance == null) {
+            instance = this;
+        }
+    }
     // Start is called before the first frame update
     void Start()
     {
-        // Singleton setup
-        if(instance == null) {
-            instance = this;
-        }
         // Set menu bar size  and position based on the number of items
         var menuRectTransform = menuBar.GetComponent<RectTransform>();
         menuRectTransform.sizeDelta = new Vector2((itemSeparation + itemScale) * (menuItems.Count) + itemSeparation, menuBarHeight);
@@ -61,16 +64,16 @@ public class MenuBarManager : MonoBehaviour
         else {
             selectedItemIndex = index;
             itemIsSelected = true;
+            PlacementManager.Instance.TransitionToCreate(SelectedItem);
             itemCells[index].GetComponent<MenuItem>().SelectItem();
             for (int i = 0; i < itemCells.Count; i++) {
                 if (i == index) continue;
                 itemCells[i].GetComponent<MenuItem>().DeselectItem();
             }
-            PlacementManager.Instance.TransitionToCreate(SelectedItem);
         }
     }
 
-    void DeselectAll() {
+    public void DeselectAll() {
         if (itemIsSelected) {
             itemCells[selectedItemIndex].GetComponent<MenuItem>().DeselectItem();
             itemIsSelected = false;
