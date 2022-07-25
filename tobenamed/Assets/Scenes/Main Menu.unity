@@ -2713,6 +2713,7 @@ GameObject:
   - component: {fileID: 2065931439}
   - component: {fileID: 2065931438}
   - component: {fileID: 2065931441}
+  - component: {fileID: 2065931442}
   m_Layer: 5
   m_Name: Play Button
   m_TagString: Untagged
@@ -2839,3 +2840,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lArrow: {fileID: 1319932515}
   rArrow: {fileID: 895090175}
+--- !u!114 &2065931442
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2065931436}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0aa317e7465ea5d4c8fca9a835fc172a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
