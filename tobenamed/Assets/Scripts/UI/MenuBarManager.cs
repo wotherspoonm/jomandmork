@@ -15,9 +15,16 @@ public class MenuBarManager : MonoBehaviour
     private int selectedItemIndex;
     private bool itemIsSelected = false;
     public GameObject SelectedItem { get { return menuItems[selectedItemIndex]; } }
+    private static MenuBarManager instance;
+    public MenuBarManager Instance { get { return instance; } }
+
     // Start is called before the first frame update
     void Start()
     {
+        // Singleton setup
+        if(instance == null) {
+            instance = this;
+        }
         // Set menu bar size  and position based on the number of items
         var menuRectTransform = menuBar.GetComponent<RectTransform>();
         menuRectTransform.sizeDelta = new Vector2((itemSeparation + itemScale) * (menuItems.Count) + itemSeparation, menuBarHeight);
