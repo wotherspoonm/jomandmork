@@ -5,14 +5,16 @@ using UnityEngine.UI;
 
 public class NavigationButton : MonoBehaviour
 {
-    public GameObject destination;
-    GameObject parentPage;
+    public MainMenuPage destination;
+    MainMenuPage parentPage;
+    SmoothVector parentPagePos;
+    SmoothVector destinationPagePos;
 
     private void Start() {
-        parentPage = transform.parent.gameObject;
+        parentPage = transform.parent.GetComponent<MainMenuPage>();
         gameObject.GetComponent<Button>().onClick.AddListener(delegate {
-            parentPage.SetActive(false);
-            destination.SetActive(true);
+            parentPage.TransitionOut();
+            destination.TransitionIn();
         });
     }
 }

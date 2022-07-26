@@ -1224,7 +1224,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3fdf3c33bee8be40915fb9e5b90ee84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  destination: {fileID: 1766997374}
+  destination: {fileID: 1766997377}
 --- !u!114 &669203415
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1600,6 +1600,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 996019305}
+  - component: {fileID: 996019306}
   m_Layer: 5
   m_Name: Main Menu
   m_TagString: Untagged
@@ -1630,7 +1631,25 @@ RectTransform:
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0, y: 1}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &996019306
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 996019304}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f63009d75c2088640981d4fc0bc0c78f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isTransitionedIn: 1
+  freq: 1
+  damp: 1
+  resp: 0
+  transitionOutPosition: {x: 0, y: -1000, z: 0}
+  transitionInPosition: {x: 0, y: 0, z: 0}
 --- !u!1 &1060795423
 GameObject:
   m_ObjectHideFlags: 0
@@ -2378,13 +2397,14 @@ GameObject:
   m_Component:
   - component: {fileID: 1766997375}
   - component: {fileID: 1766997376}
+  - component: {fileID: 1766997377}
   m_Layer: 5
   m_Name: Keybinds
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1766997375
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2408,7 +2428,7 @@ RectTransform:
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0, y: 1}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1766997376
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2425,6 +2445,24 @@ MonoBehaviour:
   keybindMenuPairs: []
   changeKeyPopup: {fileID: 633048591}
   keybindParent: {fileID: 1667171679}
+--- !u!114 &1766997377
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1766997374}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f63009d75c2088640981d4fc0bc0c78f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isTransitionedIn: 0
+  freq: 1
+  damp: 1
+  resp: 0
+  transitionOutPosition: {x: 0, y: 1000, z: 0}
+  transitionInPosition: {x: 0, y: 0, z: 0}
 --- !u!1 &1818089715
 GameObject:
   m_ObjectHideFlags: 0
@@ -2478,7 +2516,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3fdf3c33bee8be40915fb9e5b90ee84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  destination: {fileID: 996019304}
+  destination: {fileID: 996019306}
 --- !u!114 &1818089718
 MonoBehaviour:
   m_ObjectHideFlags: 0
