@@ -6,11 +6,8 @@ using UnityEngine;
 public class InteractableGameObject : MonoBehaviour
 {
     public Dictionary<KeyCode, Action> keycodeEventDictionary = new();
-    private void Awake() {
-        
-    }
 
-    private void OnMouseOver() {
+    protected virtual void OnMouseOver() {
         foreach (KeyValuePair<KeyCode, Action> keyValuePair in keycodeEventDictionary) {
             KeyCode keycode = keyValuePair.Key;
             Action action = keyValuePair.Value;

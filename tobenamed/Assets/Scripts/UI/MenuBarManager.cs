@@ -60,11 +60,11 @@ public class MenuBarManager : MonoBehaviour
         if (index == selectedItemIndex && itemIsSelected) {
             itemCells[index].GetComponent<MenuItem>().DeselectItem();
             itemIsSelected = false;
-            PlacementManager.Instance.TransitionToNoMode();
+            //PlacementManager.Instance.TransitionToNoMode();
         }
         else {
             selectedItemIndex = index;
-            PlacementManager.Instance.TransitionToCreate(SelectedItem);
+            //PlacementManager.Instance.TransitionToCreate(SelectedItem);
             itemIsSelected = true;
             itemCells[index].GetComponent<MenuItem>().SelectItem();
             for (int i = 0; i < itemCells.Count; i++) {

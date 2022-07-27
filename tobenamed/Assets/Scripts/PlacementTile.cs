@@ -5,7 +5,7 @@ using JetBrains.Annotations;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class PlacementTile : MonoBehaviour
+public class PlacementTile : InteractableGameObject
 {
     public Material defaultMaterial;
     public Material glowingMaterial;
@@ -20,60 +20,19 @@ public class PlacementTile : MonoBehaviour
         renderer = GetComponent<Renderer>();
         renderer.material = defaultMaterial;
     }
-    private void OnMouseOver() {
+    protected override void OnMouseOver() {
+        base.OnMouseOver();
         renderer.material = glowingMaterial;
-        if (Input.GetKeyDown(KeybindManager.Instance.Place)) // needs to change when KeybindManager is fixed
-        {
-            if (!objectPlaced && PlacementManager.Instance.mode == PlacementMode.Create)
-            {
-                objectToPlace = PlacementManager.Instance.GetStoredObject();
-                placedObject = CreateObject();
-                objectPlaced = true;
-            }
-        }
-        else if (Input.GetKeyDown(KeybindManager.Instance.Delete)) {
-            if (objectPlaced) {
-                Destroy(placedObject);
-                objectPlaced = false;
-            }
-        }
-        else if (Input.GetKeyDown(KeybindManager.Instance.Move)) {
-            if (objectPlaced) {
-                PlacementManager.Instance.TransitionToMove(placedObject);
-                objectPlaced = false;
-            }
-            else
-            {
-                if (PlacementManager.Instance.mode == PlacementMode.Move)
-                {
-                    objectToPlace = PlacementManager.Instance.GetStoredObject();
-                    PlacementManager.Instance.TransitionToNoMode();
-                    objectToPlace.transform.parent.transform.gameObject.GetComponent<PlacementTile>().objectPlaced = false;
-                    placedObject = CreateObject();
-                    Destroy(objectToPlace);
-                    objectPlaced = true;
-                }
-            }
-        }
-        PlacementManager.Instance.MoveObject();
     }
 
     private void OnMouseEnter()
     {
-        if (!objectPlaced)
-        {
-            objectToPlace = PlacementManager.Instance.GetStoredObject();
-            if (objectToPlace != null) {
-                ghostObject = CreateObject();
-                Renderer renderer = ghostObject.GetComponent<Renderer>();
-                renderer.material = defaultMaterial;
-            }
-        }
+
     }
     private void OnMouseExit() {
         renderer.material = defaultMaterial;
-        Destroy(ghostObject);
     }
+    /*
     private GameObject CreateObject()
     {
         Vector3 spawnPosition = transform.position;
@@ -92,4 +51,5 @@ public class PlacementTile : MonoBehaviour
         return null;
 
     }
+    */
 }

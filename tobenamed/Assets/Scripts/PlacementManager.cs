@@ -5,30 +5,51 @@ using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UIElements;
 using System;
+using Unity.VisualScripting;
 
-public class PlacementManager
+public class PlacementManager : MonoBehaviour
 {
     public PlacementMode mode;
+    public PlacementGrid placementGrid;
     [CanBeNull] private GameObject storedObject;
     private Vector3 storedObjectOriginalPosition;
     private Vector3 screenPosition;
     private Vector3 worldPosition;
-    private static readonly PlacementManager instance = new PlacementManager();
 
-    static PlacementManager()
+    void Start()
     {
-    }
-
-    private PlacementManager()
-    {
+        placementGrid.Initialise();
         mode = PlacementMode.NoMode;
+        for (int x = 0; x < placementGrid.gridSize.x; x++)
+        {
+            for (int y = 0; y < placementGrid.gridSize.y; y++)
+            {
+                placementGrid.tileArray[x,y].GetComponent<PlacementTile>().AddListener(KeybindManager.Instance.Place, () => OnPlaceObjectRequest(new Vector2Int(x,y)));
+                placementGrid.tileArray[x, y].GetComponent<PlacementTile>().AddListener(KeybindManager.Instance.Move, () => OnMoveObjectRequest(new Vector2Int(x, y)));
+                placementGrid.tileArray[x, y].GetComponent<PlacementTile>().AddListener(KeybindManager.Instance.Delete, () => OnDeleteObjectRequest(new Vector2Int(x, y)));
+            }
+        }
     }
 
-    public static PlacementManager Instance
+
+    public void OnPlaceObjectRequest(Vector2Int location)
     {
-        get { return instance; }
+        Debug.Log("Place bitch");
+        //Code to place object
     }
 
+    public void OnMoveObjectRequest(Vector2Int location)
+    {
+        Debug.Log("Move bitch");
+        //Code to move object
+    }
+
+    public void OnDeleteObjectRequest(Vector2Int location)
+    {
+        Debug.Log("Delete bitch");
+        //Code to delete object
+    }
+    /*
     public void MoveObject()
     {
         if (mode == PlacementMode.Move && storedObject != null)
@@ -86,4 +107,5 @@ public class PlacementManager
     public GameObject GetStoredObject() {
         return storedObject;
     }
+    */
 }
