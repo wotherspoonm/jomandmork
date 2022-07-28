@@ -28,4 +28,21 @@ public class PlacementGrid : MonoBehaviour
             }
         }
     }
+
+    public bool IsObjectPlaced(Vector2Int location)
+    {
+        Debug.Log(location.x);
+        Debug.Log(location.y);
+        return tileArray[location.x, location.y].GetComponent<PlacementTile>().objectPlaced;
+    }
+
+    public void PlaceObject(GameObject objectToPlace, Vector2Int location)
+    {
+        tileArray[location.x, location.y].GetComponent<PlacementTile>().PlaceObject(objectToPlace);
+    }
+
+    public GameObject RemoveObject(Vector2Int location)
+    {
+        return tileArray[location.x, location.y].GetComponent<PlacementTile>().RemoveObject();
+    }
 }

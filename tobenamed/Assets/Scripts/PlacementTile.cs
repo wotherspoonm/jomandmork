@@ -11,11 +11,8 @@ public class PlacementTile : InteractableGameObject
     public Material glowingMaterial;
     new Renderer renderer;
     public bool objectPlaced = false;
-    private float distanceFromGrid = 2f;
-    public GameObject ghostObject;
     public GameObject placedObject;
-    [CanBeNull] private GameObject objectToPlace;
-
+    private float distanceFromGrid = 2f;
     private void Start() {
         renderer = GetComponent<Renderer>();
         renderer.material = defaultMaterial;
@@ -31,6 +28,20 @@ public class PlacementTile : InteractableGameObject
     }
     private void OnMouseExit() {
         renderer.material = defaultMaterial;
+    }
+
+    public void PlaceObject(GameObject objectToPlace)
+    {
+        placedObject = objectToPlace;
+        placedObject.transform.position = transform.position;
+        placedObject.transform.position += new Vector3(0, 0, distanceFromGrid);
+        objectPlaced = true;
+    }
+
+    public GameObject RemoveObject()
+    {
+        objectPlaced = false;
+        return placedObject;
     }
     /*
     private GameObject CreateObject()

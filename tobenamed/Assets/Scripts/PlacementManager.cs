@@ -12,7 +12,7 @@ public class PlacementManager : MonoBehaviour
     public PlacementMode mode;
     public PlacementGrid placementGrid;
     [CanBeNull] private GameObject storedObject;
-    private Vector3 storedObjectOriginalPosition;
+    private Vector2Int storedObjectOriginalPosition;
     private Vector3 screenPosition;
     private Vector3 worldPosition;
 
@@ -24,9 +24,11 @@ public class PlacementManager : MonoBehaviour
         {
             for (int y = 0; y < placementGrid.gridSize.y; y++)
             {
-                placementGrid.tileArray[x,y].GetComponent<PlacementTile>().AddListener(KeybindManager.Instance.Place, () => OnPlaceObjectRequest(new Vector2Int(x,y)));
-                placementGrid.tileArray[x, y].GetComponent<PlacementTile>().AddListener(KeybindManager.Instance.Move, () => OnMoveObjectRequest(new Vector2Int(x, y)));
-                placementGrid.tileArray[x, y].GetComponent<PlacementTile>().AddListener(KeybindManager.Instance.Delete, () => OnDeleteObjectRequest(new Vector2Int(x, y)));
+                int tempX = x;
+                int tempY = y;
+                placementGrid.tileArray[x,y].GetComponent<PlacementTile>().AddListener(KeybindManager.Instance.Place, () => OnPlaceObjectRequest(new Vector2Int(tempX, tempY)));
+                placementGrid.tileArray[x,y].GetComponent<PlacementTile>().AddListener(KeybindManager.Instance.Move, () => OnMoveObjectRequest(new Vector2Int(tempX, tempY)));
+                placementGrid.tileArray[x,y].GetComponent<PlacementTile>().AddListener(KeybindManager.Instance.Delete, () => OnDeleteObjectRequest(new Vector2Int(tempX, tempY)));
             }
         }
     }
@@ -34,25 +36,46 @@ public class PlacementManager : MonoBehaviour
 
     public void OnPlaceObjectRequest(Vector2Int location)
     {
-        Debug.Log("Place bitch");
-        //Code to place object
+        if (mode == PlacementMode.Create && placementGrid.IsObjectPlaced(location))
+        {
+            placementGrid.PlaceObject(storedObject,location);
+        }
     }
 
     public void OnMoveObjectRequest(Vector2Int location)
     {
-        Debug.Log("Move bitch");
-        //Code to move object
+        if (mode == PlacementMode.Move)
+        {
+            if (!placementGrid.IsObjectPlaced(location))
+            {
+                placementGrid.PlaceObject(storedObject,location);
+                mode = PlacementMode.NoMode;
+            }
+        }
+        else
+        {
+            if (placementGrid.IsObjectPlaced(location))
+            {
+                storedObject = placementGrid.RemoveObject(location);
+                storedObjectOriginalPosition = location;
+                mode = PlacementMode.Move;
+                //Deselect selected object
+            }
+        }
     }
 
     public void OnDeleteObjectRequest(Vector2Int location)
     {
-        Debug.Log("Delete bitch");
-        //Code to delete object
+        if (placementGrid.IsObjectPlaced(location))
+        {
+            GameObject objectToDestroy = placementGrid.RemoveObject(location);
+            Destroy(objectToDestroy);
+        }
     }
-    /*
-    public void MoveObject()
+    void Update()
     {
-        if (mode == PlacementMode.Move && storedObject != null)
+        //Code to make object follow position of mouse
+        if (storedObject != null)
         {
             screenPosition = Input.mousePosition;
             Ray ray = Camera.main.ScreenPointToRay(screenPosition);
@@ -64,7 +87,7 @@ public class PlacementManager : MonoBehaviour
             storedObject.transform.position = worldPosition;
         }
     }
-
+    /*
     public void StateLeave()
     {
         switch (mode)
