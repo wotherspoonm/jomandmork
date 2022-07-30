@@ -12,20 +12,17 @@ public class PlacementTile : InteractableGameObject
     new Renderer renderer;
     public bool objectPlaced = false;
     public GameObject placedObject;
-    private float distanceFromGrid = 2f;
+    public static float distanceFromGrid = 2f;
     private void Start() {
         renderer = GetComponent<Renderer>();
         renderer.material = defaultMaterial;
     }
-    protected override void OnMouseOver() {
-        base.OnMouseOver();
+    void OnMouseOver() {
+        base.Interact();
         renderer.material = glowingMaterial;
     }
 
-    private void OnMouseEnter()
-    {
 
-    }
     private void OnMouseExit() {
         renderer.material = defaultMaterial;
     }

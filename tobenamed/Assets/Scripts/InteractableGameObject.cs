@@ -7,7 +7,7 @@ public class InteractableGameObject : MonoBehaviour
 {
     public Dictionary<KeyCode, Action> keycodeEventDictionary = new();
 
-    protected virtual void OnMouseOver() {
+    protected virtual void Interact() {
         foreach (KeyValuePair<KeyCode, Action> keyValuePair in keycodeEventDictionary) {
             KeyCode keycode = keyValuePair.Key;
             Action action = keyValuePair.Value;

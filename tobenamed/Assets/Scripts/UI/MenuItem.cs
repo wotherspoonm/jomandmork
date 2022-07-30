@@ -1,10 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class MenuItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+public class MenuItem : InteractableGameObject, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler
 {
     bool isHovered;
     bool isSelected;
@@ -49,5 +50,9 @@ public class MenuItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     public void OnPointerExit(PointerEventData eventData) {
         isHovered = false;
         if (!isSelected) rotation.TargetValue = defaultRotation.eulerAngles + rotation.Value - new Vector3((rotation.Value.x - defaultRotation.eulerAngles.x + 180) % 360 - 180 + defaultRotation.eulerAngles.x, (rotation.Value.y - defaultRotation.eulerAngles.y + 180) % 360 - 180 + defaultRotation.eulerAngles.y, (rotation.Value.z + defaultRotation.eulerAngles.z - 180) % 360 - 180 + defaultRotation.eulerAngles.z);
+    }
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        base.Interact();
     }
 }

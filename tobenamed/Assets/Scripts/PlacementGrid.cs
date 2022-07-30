@@ -31,8 +31,6 @@ public class PlacementGrid : MonoBehaviour
 
     public bool IsObjectPlaced(Vector2Int location)
     {
-        Debug.Log(location.x);
-        Debug.Log(location.y);
         return tileArray[location.x, location.y].GetComponent<PlacementTile>().objectPlaced;
     }
 
