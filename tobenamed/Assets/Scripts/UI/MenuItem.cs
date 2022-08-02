@@ -9,6 +9,7 @@ public class MenuItem : InteractableGameObject, IPointerEnterHandler, IPointerEx
 {
     bool isHovered;
     bool isSelected;
+    public bool IsSelected { get { return isSelected; } }
     public GameObject displayItem;
     PlaceableObject displayItemPO;
     public SmoothVector rotation;
