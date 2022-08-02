@@ -17,7 +17,14 @@ public class InteractableGameObject : MonoBehaviour
         }
     }
 
-    public void AddListener(KeyCode keycode, Action action) {
-        keycodeEventDictionary.Add(keycode, action);
+    public void AddInteractionListener(KeyCode keycode, Action action) {
+        if (!keycodeEventDictionary.ContainsKey(keycode))
+        {
+            keycodeEventDictionary.Add(keycode, action);
+        }
+        else
+        {
+            keycodeEventDictionary[keycode] += action;
+        }
     }
 }

@@ -14,8 +14,14 @@ public class MenuItem : InteractableGameObject, IPointerEnterHandler, IPointerEx
     PlaceableObject displayItemPO;
     public SmoothVector rotation;
     Quaternion defaultRotation;
-    public Vector3 dispRotation;
-    public Vector3 dispTRotation;
+    public Vector3 targetRotation;
+    public Vector3 actualRotation;
+
+    void Update()
+    {
+        targetRotation = rotation.TargetValue;
+        actualRotation = rotation.Value;
+    }
 
     private void Start() {
         isHovered = false;
@@ -31,7 +37,7 @@ public class MenuItem : InteractableGameObject, IPointerEnterHandler, IPointerEx
     }
     public void DeselectItem() {
         isSelected = false;
-        if(!isSelected) rotation.TargetValue = defaultRotation.eulerAngles + rotation.Value - new Vector3((rotation.Value.x - defaultRotation.eulerAngles.x + 180) % 360 - 180 +defaultRotation.eulerAngles.x, (rotation.Value.y - defaultRotation.eulerAngles.y + 180) % 360 - 180 + defaultRotation.eulerAngles.y, (rotation.Value.z + defaultRotation.eulerAngles.z - 180) % 360 - 180 + defaultRotation.eulerAngles.z);
+        ResetRotation();
         displayItemPO.Deselect();
     }
 
@@ -50,10 +56,14 @@ public class MenuItem : InteractableGameObject, IPointerEnterHandler, IPointerEx
 
     public void OnPointerExit(PointerEventData eventData) {
         isHovered = false;
-        if (!isSelected) rotation.TargetValue = defaultRotation.eulerAngles + rotation.Value - new Vector3((rotation.Value.x - defaultRotation.eulerAngles.x + 180) % 360 - 180 + defaultRotation.eulerAngles.x, (rotation.Value.y - defaultRotation.eulerAngles.y + 180) % 360 - 180 + defaultRotation.eulerAngles.y, (rotation.Value.z + defaultRotation.eulerAngles.z - 180) % 360 - 180 + defaultRotation.eulerAngles.z);
+        ResetRotation();
     }
     public void OnPointerDown(PointerEventData eventData)
     {
         base.Interact();
+    }
+    public void ResetRotation()
+    {
+        if (!isSelected) rotation.TargetValue = defaultRotation.eulerAngles + rotation.Value - new Vector3((rotation.Value.x - defaultRotation.eulerAngles.x + 180) % 360 - 180 + defaultRotation.eulerAngles.x, (rotation.Value.y - defaultRotation.eulerAngles.y + 180) % 360 - 180 + defaultRotation.eulerAngles.y, (rotation.Value.z + defaultRotation.eulerAngles.z - 180) % 360 - 180 + defaultRotation.eulerAngles.z);
     }
 }

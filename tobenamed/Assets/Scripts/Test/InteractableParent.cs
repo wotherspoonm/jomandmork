@@ -8,7 +8,7 @@ public class InteractableParent : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        child.AddListener(KeyCode.Mouse0, hello);
+        child.AddInteractionListener(KeyCode.Mouse0, hello);
     }
 
     // Update is called once per frame

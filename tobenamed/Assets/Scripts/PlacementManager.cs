@@ -17,53 +17,35 @@ public class PlacementManager : MonoBehaviour
     private Vector2Int storedObjectOriginalPosition;
     private Vector3 screenPosition;
     private Vector3 worldPosition;
-    private int selectedItemIndex;
-    private bool itemIsSelected = false;
 
     void Start()
     {
         placementGrid.Initialise();
         mode = PlacementMode.NoMode;
-        //Setting delegates for placement tiles
+        // Setting delegates for placement tiles
         for (int x = 0; x < placementGrid.gridSize.x; x++)
         {
             for (int y = 0; y < placementGrid.gridSize.y; y++)
             {
                 int tempX = x;
                 int tempY = y;
-                placementGrid.tileArray[x,y].GetComponent<PlacementTile>().AddListener(KeybindManager.Instance.Place, () => OnPlaceObjectRequest(new Vector2Int(tempX, tempY)));
-                placementGrid.tileArray[x,y].GetComponent<PlacementTile>().AddListener(KeybindManager.Instance.Move, () => OnMoveObjectRequest(new Vector2Int(tempX, tempY)));
-                placementGrid.tileArray[x,y].GetComponent<PlacementTile>().AddListener(KeybindManager.Instance.Delete, () => OnDeleteObjectRequest(new Vector2Int(tempX, tempY)));
+                placementGrid.tileArray[x,y].GetComponent<PlacementTile>().AddInteractionListener(KeybindManager.Instance.Place, () => OnPlaceObjectRequest(new Vector2Int(tempX, tempY)));
+                placementGrid.tileArray[x,y].GetComponent<PlacementTile>().AddInteractionListener(KeybindManager.Instance.Move, () => OnMoveObjectRequest(new Vector2Int(tempX, tempY)));
+                placementGrid.tileArray[x,y].GetComponent<PlacementTile>().AddInteractionListener(KeybindManager.Instance.Delete, () => OnDeleteObjectRequest(new Vector2Int(tempX, tempY)));
             }
         }
-        //Setting delegates for MenuItems
-        for (int i = 0; i < menuBar.menuItems.Count; i++)
-        {
-            int tempI = i;
-            menuBar.itemCells[i].GetComponent<MenuItem>().AddListener(KeyCode.Mouse0, () => OnSelectRequest(tempI));
-        }
+        // Adding Menubar delegates
+        menuBar.MenubarSelectionEventHandler += OnMenubarSelection;
     }
 
-    public void OnSelectRequest(int itemIndex)
+    public void OnMenubarSelection(object sender, MenubarSelectionEventArgs e)
     {
-        bool temp = itemIsSelected;
-        StateLeave();
-        itemIsSelected = temp;
-        if (itemIndex == selectedItemIndex && itemIsSelected) {
-            menuBar.itemCells[itemIndex].GetComponent<MenuItem>().DeselectItem();
-            itemIsSelected = false;
-            mode = PlacementMode.NoMode;
-        }
-        else {
-            selectedItemIndex = itemIndex;
-            itemIsSelected = true;
-            menuBar.DeselectAll();
-            menuBar.itemCells[itemIndex].GetComponent<MenuItem>().SelectItem();
-            mode = PlacementMode.Create;
-            storedObject = CloneObject(menuBar.menuItems[selectedItemIndex]);
-        }
-    }
+        if (mode != PlacementMode.Create) StateLeave();
+        if (storedObject != null) Destroy(storedObject);
 
+        mode = PlacementMode.Create;
+        storedObject = CloneObject(e.gameObjectToSelect);
+    }
 
     public void OnPlaceObjectRequest(Vector2Int location)
     {
@@ -113,7 +95,6 @@ public class PlacementManager : MonoBehaviour
             case PlacementMode.Create:
                 menuBar.DeselectAll();
                 Destroy(storedObject);
-                itemIsSelected = false;
                 break;
             case PlacementMode.Move:
                 placementGrid.PlaceObject(storedObject,storedObjectOriginalPosition);
