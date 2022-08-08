@@ -18,7 +18,7 @@ public class MenuBar : MonoBehaviour
     private int? selectedItemIndex = null;
     public bool ItemIsSelected { get { return selectedItemIndex != null; } }
     public EventHandler<MenubarSelectionEventArgs> MenubarSelectionEventHandler;
-    public EventHandler MenubarDeselectionEventHandler;
+    public EventHandler<MenubarSelectionEventArgs> MenubarDeselectionEventHandler;
 
     // Start is called before the first frame update
     void Start()
@@ -77,7 +77,8 @@ public class MenuBar : MonoBehaviour
 
     protected virtual void OnMenubarDeselection()
     {
-        MenubarDeselectionEventHandler?.Invoke(this, EventArgs.Empty);
+        selectedItemIndex = null;
+        MenubarDeselectionEventHandler?.Invoke(this, null);
     }
 }
 
