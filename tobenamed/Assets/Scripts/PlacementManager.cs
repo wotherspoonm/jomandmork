@@ -36,15 +36,23 @@ public class PlacementManager : MonoBehaviour
         }
         // Adding Menubar delegates
         menuBar.MenubarSelectionEventHandler += OnMenubarSelection;
+        menuBar.MenubarDeselectionEventHandler += OnMenubarDeselection;
     }
 
     public void OnMenubarSelection(object sender, MenubarSelectionEventArgs e)
     {
         if (mode != PlacementMode.Create) StateLeave();
         if (storedObject != null) Destroy(storedObject);
-
         mode = PlacementMode.Create;
         storedObject = CloneObject(e.gameObjectToSelect);
+    }
+
+    public void OnMenubarDeselection(object sender, MenubarSelectionEventArgs e)
+    {
+        StateLeave();
+        storedObject = null;
+        mode = PlacementMode.NoMode;
+
     }
 
     public void OnPlaceObjectRequest(Vector2Int location)
@@ -105,7 +113,7 @@ public class PlacementManager : MonoBehaviour
     void Update()
     {
         //Code to make object follow position of mouse
-        if (mode != PlacementMode.NoMode)
+        if (mode != PlacementMode.NoMode && storedObject != null)
         {
             screenPosition = Input.mousePosition;
             Ray ray = Camera.main.ScreenPointToRay(screenPosition);
