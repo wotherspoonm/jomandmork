@@ -26,6 +26,13 @@ public class DEAnimator : MonoBehaviour
         rotationSV = new(transform.rotation.eulerAngles, 2, 1, 0);
         snappingAngles = transform.rotation.eulerAngles;
     }
+
+    public void SetPositionParameters(float frequency, float damping, float reactiveness) =>
+        positionSV.ChangeProperties(frequency, damping, reactiveness);
+
+    public void SetRotationParameters(float frequency, float damping, float reactiveness) =>
+        rotationSV.ChangeProperties(frequency, damping, reactiveness);
+
     public void MoveTo(Vector3 targetLocation) {
         positionSV.TargetValue = targetLocation;
         onUpdate -= UpdatePosition; // This is to prevent duplicate UpdatePosition calls. 
@@ -43,11 +50,10 @@ public class DEAnimator : MonoBehaviour
         onUpdate += UpdateRotation;
     }
 
+    public void SetSpin(float x, float y = 0, float z = 0) => SetSpin(new(x, y, z));
+
     public void SetAngle(Vector3 angle) {
         Vector3 eulerAngles = transform.rotation.eulerAngles;
-        Debug.Log(rotationSV.TargetValue);
-        Debug.Log(rotationSV.TargetValue - RestrictAngle(rotationSV.TargetValue, snappingAngles));
-        Debug.Log(angle + eulerAngles - RestrictAngle(eulerAngles, snappingAngles));
         rotationSV.TargetValue = angle + rotationSV.TargetValue - RestrictAngle(rotationSV.TargetValue, snappingAngles);
 
         onUpdate -= UpdateRotation; // This is to prevent duplicate calls. 
@@ -60,9 +66,9 @@ public class DEAnimator : MonoBehaviour
         transform.rotation = Quaternion.Euler(rotationSV.Value);
 
         // If the object is close to its target angle and not rotating quickly, it is assumed to be at rest and no longer needs to be simulated
-        if (Vector3.Distance(rotationSV.TargetValue, transform.rotation.eulerAngles) < rotationalTolerance && rotationSV.Velocity.magnitude < angularVelocimetricTolerance) {
-            transform.rotation = Quaternion.Euler(positionSV.TargetValue);
+        if (Vector3.Distance(RestrictAngle(rotationSV.TargetValue, snappingAngles), RestrictAngle(rotationSV.TargetValue, transform.rotation.eulerAngles)) < rotationalTolerance && rotationSV.Velocity.magnitude < angularVelocimetricTolerance) {
             onUpdate -= UpdateRotation;
+            transform.rotation = Quaternion.Euler(rotationSV.TargetValue);
         }
     }
 
