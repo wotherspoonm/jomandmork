@@ -58,23 +58,35 @@ public class MenuBar : MonoBehaviour
             newCell.GetComponent<MenuItem>().displayItem.transform.localScale = Vector3.one * newCell.GetComponent<MenuItem>().displayItem.GetComponent<PlaceableObject>().menuPreviewSize;
             itemCells.Add(newCell);
             menuItems.Add(objectToAdd);
-            UpdateInteractionListeners();
+            UpdateInteractionListeners(true);
             AdjustPositions();
         }
     }
 
     public void RemoveItem(GameObject objectToRemove) {
-        //    if ( more than one item) {
-        //          decrement item count
-        //    }
-        //    else {
-        //          Remove item
-        //    }
-        throw new NotImplementedException();
+        if (menuItems.Contains(objectToRemove)) {
+            var index = menuItems.FindIndex(x => objectToRemove.Equals(x)); // pls change
+            var menuItem = itemCells[index].GetComponent<MenuItem>();
+            var itemCellGo = itemCells[index];
+            if (menuItem.ItemCount == 1) {
+                interactionActions.RemoveAt(index);
+                itemCells.RemoveAt(index);
+                menuItems.RemoveAt(index);
+                UpdateInteractionListeners(false);
+                AdjustPositions();
+                Destroy(itemCellGo);
+            }
+            else {
+                menuItem.ItemCount -= 1;
+            }
+        }
+        else {
+            Debug.LogWarning("Tried to remove item that does not exist");
+        }
     }
 
-    private void UpdateInteractionListeners() {
-        for (int i = menuItems.Count - 2; i >= 0; i--) {
+    private void UpdateInteractionListeners(bool isAdding) {
+        for (int i = interactionActions.Count - 1; i >= 0; i--) {
             itemCells[i].GetComponent<MenuItem>().RemoveInteractionListener(KeyCode.Mouse0, interactionActions[i]);
         }
         interactionActions.Clear();
@@ -95,6 +107,7 @@ public class MenuBar : MonoBehaviour
             //itemCells[i].GetComponent<DEAnimator>().MoveTo(new(i * (itemSeparation + itemScale) + 0.5f * itemScale + itemSeparation, 0, -itemScale));
         }
     }
+
 
     public void SelectItem(int itemIndex)
     {

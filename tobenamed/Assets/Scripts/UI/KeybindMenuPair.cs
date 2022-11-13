@@ -4,6 +4,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 
+
 public class KeybindMenuPair : MonoBehaviour
 {
     public TextMeshProUGUI text;
