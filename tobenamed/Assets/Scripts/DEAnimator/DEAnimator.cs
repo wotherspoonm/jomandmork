@@ -24,7 +24,7 @@ public class DEAnimator : MonoBehaviour
     private Vector3 snappingAngles;
 
     private void Awake() {
-        positionSV = new(Position, 1, 1, -1f);
+        positionSV = new(Position, 1, 1, 0);
         rotationSV = new(transform.rotation.eulerAngles, 2, 1, 0);
         bounceSV = new(Vector3.zero,0.001f,50f,1, 10f);
         snappingAngles = transform.rotation.eulerAngles;

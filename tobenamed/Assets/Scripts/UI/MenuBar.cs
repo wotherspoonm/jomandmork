@@ -74,7 +74,7 @@ public class MenuBar : MonoBehaviour
     }
 
     private void UpdateInteractionListeners() {
-        for (int i = menuItems.Count - 2; i > 0; i--) {
+        for (int i = menuItems.Count - 2; i >= 0; i--) {
             itemCells[i].GetComponent<MenuItem>().RemoveInteractionListener(KeyCode.Mouse0, interactionActions[i]);
         }
         interactionActions.Clear();

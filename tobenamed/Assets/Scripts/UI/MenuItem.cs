@@ -15,7 +15,7 @@ public class MenuItem : InteractableGameObject, IPointerEnterHandler, IPointerEx
     private PlaceableObject displayItemPO;
     [SerializeField]
     private TextMeshProUGUI itemCountText;
-    private int itemCount = 0;
+    private int itemCount = 1;
     public int ItemCount { get { return itemCount; } set { itemCount = value; itemCountText.text = itemCount.ToString(); } }
     private Vector3 defaultRotation;
     private float spinspeed = 50;
