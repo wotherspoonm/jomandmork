@@ -4,21 +4,24 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using TMPro;
 
 public class MenuItem : InteractableGameObject, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler
 {
-    bool isHovered;
     bool isSelected;
     public bool IsSelected { get { return isSelected; } }
     public GameObject displayItem;
     private DEAnimator animator;
     private PlaceableObject displayItemPO;
+    [SerializeField]
+    private TextMeshProUGUI itemCountText;
+    private int itemCount = 0;
+    public int ItemCount { get { return itemCount; } set { itemCount = value; itemCountText.text = itemCount.ToString(); } }
     private Vector3 defaultRotation;
     private float spinspeed = 50;
 
 
     private void Start() {
-        isHovered = false;
         // Setup button and add  click listener
         displayItemPO = displayItem.GetComponent<PlaceableObject>();
         animator = displayItem.AddComponent<DEAnimator>();
@@ -38,12 +41,10 @@ public class MenuItem : InteractableGameObject, IPointerEnterHandler, IPointerEx
     }
 
     public void OnPointerEnter(PointerEventData eventData) {
-        isHovered = true;
         animator.SetSpin(spinspeed);
     }
 
     public void OnPointerExit(PointerEventData eventData) {
-        isHovered = false;
         if (!isSelected) {
             animator.SetSpin(0);
             animator.SetAngle(defaultRotation);

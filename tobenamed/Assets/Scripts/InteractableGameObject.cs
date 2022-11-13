@@ -27,4 +27,9 @@ public class InteractableGameObject : MonoBehaviour
             keycodeEventDictionary[keycode] += action;
         }
     }
+
+    public void RemoveInteractionListener(KeyCode keycode, Action action) {
+        if (keycodeEventDictionary.ContainsKey(keycode))
+            keycodeEventDictionary[keycode] -= action;
+    }
 }
