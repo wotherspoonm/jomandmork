@@ -33,43 +33,46 @@ public class MenuBar : MonoBehaviour
     }
 
     public void AddItem(GameObject objectToAdd) {
-        // This line should be simplified
-        if (menuItems.Exists(x => x.displayItemPO.data.name == objectToAdd.GetComponent<PlaceableObject>().data.name)) {
-            int index = menuItems.FindIndex(x => x.displayItemPO.data.name == objectToAdd.GetComponent<PlaceableObject>().data.name);
-            menuItems[index].ItemCount += 1;
-        }
-        else {
-            var newMenuItem = Instantiate(itemCellPrefab, menuBar.transform).GetComponent<MenuItem>();
+        // Find existing item of the same type on the menubar
+        MenuItem existingItem = menuItems.Find(x => x.displayItemPO.data.name == objectToAdd.GetComponent<PlaceableObject>().data.name);
+        if(existingItem == null) {
+            MenuItem newMenuItem = Instantiate(itemCellPrefab, menuBar.transform).GetComponent<MenuItem>();
             newMenuItem.displayItem = Instantiate(prefabManager.GetPrefabFromData(objectToAdd.GetComponent<PlaceableObject>().data), newMenuItem.transform);
             newMenuItem.displayItem.transform.localScale = Vector3.one * newMenuItem.GetComponent<MenuItem>().displayItem.GetComponent<PlaceableObject>().data.menuPreviewSize;
             menuItems.Add(newMenuItem);
-            UpdateInteractionListeners(true);
+            UpdateInteractionListeners();
             AdjustPositions();
+        }
+        else {
+            existingItem.ItemCount++;
         }
     }
 
     public void RemoveItem(GameObject objectToRemove) {
-        if (menuItems.Exists(x => x.displayItemPO.data.name == objectToRemove.GetComponent<PlaceableObject>().data.name)) {
+        // Find existing item of the same type on the menubar
+        MenuItem existingItem = menuItems.Find(x => x.displayItemPO.data.name == objectToRemove.GetComponent<PlaceableObject>().data.name);
+        if(existingItem == null) {
+            Debug.LogWarning("Tried to remove item that does not exist");
+        }
+        else {
             int index = menuItems.FindIndex(x => x.displayItemPO.data.name == objectToRemove.GetComponent<PlaceableObject>().data.name);
             var menuItem = menuItems[index];
             var itemCellGo = menuItems[index];
             if (menuItem.ItemCount == 1) {
+                DeselectAll();
                 interactionActions.RemoveAt(index);
                 menuItems.RemoveAt(index);
-                UpdateInteractionListeners(false);
+                UpdateInteractionListeners();
                 AdjustPositions();
                 Destroy(itemCellGo.gameObject);
             }
             else {
-                menuItem.ItemCount -= 1;
+                menuItem.ItemCount --;
             }
-        }
-        else {
-            Debug.LogWarning("Tried to remove item that does not exist");
         }
     }
 
-    private void UpdateInteractionListeners(bool isAdding) {
+    private void UpdateInteractionListeners() {
         for (int i = interactionActions.Count - 1; i >= 0; i--) {
             menuItems[i].RemoveInteractionListener(KeyCode.Mouse0, interactionActions[i]);
         }
@@ -116,9 +119,9 @@ public class MenuBar : MonoBehaviour
     {
         for (int i = 0; i < menuItems.Count; i++) if (menuItems[i].GetComponent<MenuItem>().IsSelected)
         {
-            OnMenubarDeselection();
             menuItems[i].GetComponent<MenuItem>().DeselectItem();
         }
+        OnMenubarDeselection();
     }
 
     protected virtual void OnMenubarSelection(MenubarSelectionEventArgs eventArgs)
