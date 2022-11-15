@@ -5,14 +5,12 @@ using UnityEngine;
 
 public abstract class PlaceableObject : MonoBehaviour 
 {
-    public Material material;
-    public Material selectedMaterial;
-    public float menuPreviewSize;
+    public PlaceableObjectData data;
 
     public void Select() {
-        gameObject.GetComponent<Renderer>().material = selectedMaterial;
+        gameObject.GetComponent<Renderer>().material = data.material;
     }
     public void Deselect() {
-        gameObject.GetComponent<Renderer>().material = material;
+        gameObject.GetComponent<Renderer>().material = data.selectedMaterial;
     }
 }

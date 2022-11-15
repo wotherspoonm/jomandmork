@@ -12,7 +12,7 @@ public class MenuItem : InteractableGameObject, IPointerEnterHandler, IPointerEx
     public bool IsSelected { get { return isSelected; } }
     public GameObject displayItem;
     private DEAnimator animator;
-    private PlaceableObject displayItemPO;
+    public PlaceableObject displayItemPO;
     [SerializeField]
     private TextMeshProUGUI itemCountText;
     private int itemCount = 1;

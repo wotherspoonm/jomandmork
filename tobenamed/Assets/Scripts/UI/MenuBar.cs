@@ -8,14 +8,12 @@ using UnityEngine.UI;
 
 public class MenuBar : MonoBehaviour
 {
-    public List<GameObject> menuItems;
-    public List<GameObject> itemCells = new();
+    public PrefabManager prefabManager;
+    public List<MenuItem> itemCells = new();
     private List<Action> interactionActions = new();
-    private List<int> itemCounts = new();
     public GameObject menuBar;
     public GameObject itemCellPrefab;
     public SmoothFloat widthSF;
-    public GameObject SelectedItem { get { return menuItems[(int)selectedItemIndex]; } }
     public const float itemScale = 50;
     public const float itemSeparation = 45;
     public const float menuBarHeight = 90;
@@ -30,51 +28,37 @@ public class MenuBar : MonoBehaviour
         widthSF = new SmoothFloat(0, 1, 1, 1);
         // Set menu bar size  and position based on the number of items
         var menuRectTransform = menuBar.GetComponent<RectTransform>();
-        menuRectTransform.sizeDelta = new Vector2((itemSeparation + itemScale) * (menuItems.Count) + itemSeparation, menuBarHeight);
+        menuRectTransform.sizeDelta = new Vector2((itemSeparation + itemScale) * (itemCells.Count) + itemSeparation, menuBarHeight);
         menuRectTransform.anchoredPosition3D = new Vector3(menuRectTransform.anchoredPosition3D.x, menuRectTransform.anchoredPosition3D.y, itemScale);
-        // Spawn items for display 
-        for (int i = 0; i < menuItems.Count; i++) {
-            var newCell = Instantiate(itemCellPrefab, menuBar.transform);
-            newCell.GetComponent<RectTransform>().anchoredPosition3D = new Vector3(i * (itemSeparation + itemScale) + 0.5f * itemScale + itemSeparation, 0, -itemScale);
-            newCell.GetComponent<MenuItem>().displayItem = Instantiate(menuItems[i], newCell.transform);
-            newCell.GetComponent<MenuItem>().displayItem.transform.localScale = Vector3.one * newCell.GetComponent<MenuItem>().displayItem.GetComponent<PlaceableObject>().menuPreviewSize;
-            itemCells.Add(newCell);
-            int itemSelectionIndex = i;
-            newCell.GetComponent<MenuItem>().AddInteractionListener(KeyCode.Mouse0, delegate
-            {
-                SelectItem(itemSelectionIndex);
-            });
-        }
     }
 
     public void AddItem(GameObject objectToAdd) {
-        if (menuItems.Contains(objectToAdd)) {
-            var index = menuItems.FindIndex(x => objectToAdd.Equals(x));
-            itemCells[index].GetComponent<MenuItem>().ItemCount += 1;
+        // This line should be simplified
+        if (itemCells.Exists(x => x.displayItemPO.data.name == objectToAdd.GetComponent<PlaceableObject>().data.name)) {
+            int index = itemCells.FindIndex(x => x.displayItemPO.data.name == objectToAdd.GetComponent<PlaceableObject>().data.name);
+            itemCells[index].ItemCount += 1;
         }
         else {
-            var newCell = Instantiate(itemCellPrefab, menuBar.transform);
-            newCell.GetComponent<MenuItem>().displayItem = Instantiate(objectToAdd, newCell.transform);
-            newCell.GetComponent<MenuItem>().displayItem.transform.localScale = Vector3.one * newCell.GetComponent<MenuItem>().displayItem.GetComponent<PlaceableObject>().menuPreviewSize;
-            itemCells.Add(newCell);
-            menuItems.Add(objectToAdd);
+            var newMenuItem = Instantiate(itemCellPrefab, menuBar.transform).GetComponent<MenuItem>();
+            newMenuItem.displayItem = Instantiate(prefabManager.GetPrefabFromData(objectToAdd.GetComponent<PlaceableObject>().data), newMenuItem.transform);
+            newMenuItem.displayItem.transform.localScale = Vector3.one * newMenuItem.GetComponent<MenuItem>().displayItem.GetComponent<PlaceableObject>().data.menuPreviewSize;
+            itemCells.Add(newMenuItem);
             UpdateInteractionListeners(true);
             AdjustPositions();
         }
     }
 
     public void RemoveItem(GameObject objectToRemove) {
-        if (menuItems.Contains(objectToRemove)) {
-            var index = menuItems.FindIndex(x => objectToRemove.Equals(x)); // pls change
+        if (itemCells.Exists(x => x.displayItemPO.data.name == objectToRemove.GetComponent<PlaceableObject>().data.name)) {
+            int index = itemCells.FindIndex(x => x.displayItemPO.data.name == objectToRemove.GetComponent<PlaceableObject>().data.name);
             var menuItem = itemCells[index].GetComponent<MenuItem>();
             var itemCellGo = itemCells[index];
             if (menuItem.ItemCount == 1) {
                 interactionActions.RemoveAt(index);
                 itemCells.RemoveAt(index);
-                menuItems.RemoveAt(index);
                 UpdateInteractionListeners(false);
                 AdjustPositions();
-                Destroy(itemCellGo);
+                Destroy(itemCellGo.gameObject);
             }
             else {
                 menuItem.ItemCount -= 1;
@@ -90,7 +74,7 @@ public class MenuBar : MonoBehaviour
             itemCells[i].GetComponent<MenuItem>().RemoveInteractionListener(KeyCode.Mouse0, interactionActions[i]);
         }
         interactionActions.Clear();
-        for (int i = 0; i < menuItems.Count; i++) {
+        for (int i = 0; i < itemCells.Count; i++) {
             int itemSelectionIndex = i;
             interactionActions.Add(delegate {
                 SelectItem(itemSelectionIndex);
@@ -100,7 +84,7 @@ public class MenuBar : MonoBehaviour
     }
 
     private void AdjustPositions() {
-        for (int i = 0; i < menuItems.Count; i++) {
+        for (int i = 0; i < itemCells.Count; i++) {
             float instanceSpacing = (itemSeparation + itemScale);
             float firstCoord = -(itemCells.Count - 1) * instanceSpacing * 0.5f;
             itemCells[i].GetComponent<DEAnimator>().MoveTo(new(firstCoord + i*instanceSpacing,0,-itemScale));
@@ -121,7 +105,7 @@ public class MenuBar : MonoBehaviour
                 return;
             }
         }
-        var itemToSelect = menuItems[itemIndex];
+        var itemToSelect = itemCells[itemIndex].displayItem;
         selectedItemIndex = itemIndex;
         itemCells[itemIndex].GetComponent<MenuItem>().SelectItem();
         // Send MenubarSelection event 

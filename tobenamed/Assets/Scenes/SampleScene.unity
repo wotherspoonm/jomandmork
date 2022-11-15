@@ -326,9 +326,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: TestDEObject, Assembly-CSharp
-        m_MethodName: 
+      - m_Target: {fileID: 707782058}
+        m_TargetAssemblyTypeName: DebugMenubar, Assembly-CSharp
+        m_MethodName: RemoveCube
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -600,7 +600,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4a63570ce0568a42b9634d272e8773b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  menuItems: []
+  prefabManager: {fileID: 0}
   itemCells: []
   menuBar: {fileID: 394936883}
   itemCellPrefab: {fileID: 6751425439378306988, guid: c899299d3a3d33544af89180790033bf, type: 3}
@@ -1970,6 +1970,7 @@ GameObject:
   - component: {fileID: 941203571}
   - component: {fileID: 941203570}
   - component: {fileID: 941203572}
+  - component: {fileID: 941203573}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -2019,6 +2020,21 @@ MonoBehaviour:
   mode: 0
   placementGrid: {fileID: 1245068570}
   menuBar: {fileID: 394936887}
+--- !u!114 &941203573
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 941203569}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66e37c18ecfa4d14bbd8c8ac2778d3d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefabs:
+  - {fileID: 1213956642485943509, guid: fe8a8d916e7aa484f8754ece571b19a1, type: 3}
+  - {fileID: 1335384363334660476, guid: 4da98b1a80350fe4c8e0ba7221c85d34, type: 3}
 --- !u!1 &1029627548
 GameObject:
   m_ObjectHideFlags: 0
@@ -2238,9 +2254,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: TestDEObject, Assembly-CSharp
-        m_MethodName: 
+      - m_Target: {fileID: 707782058}
+        m_TargetAssemblyTypeName: DebugMenubar, Assembly-CSharp
+        m_MethodName: RemoveSphere
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

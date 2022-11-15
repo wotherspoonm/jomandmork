@@ -107,9 +107,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1335384363334660476}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c09d3e117e1fe574f9f3c50d0fa4cc42, type: 3}
+  m_Script: {fileID: 11500000, guid: 22a0051fbab5eda478d6421254124825, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  material: {fileID: 2100000, guid: 051e9361acc3b7141a4bb7d87addd762, type: 2}
-  selectedMaterial: {fileID: 2100000, guid: 0ae2f5ea5385a9249bda337b58c11f28, type: 2}
-  menuPreviewSize: 50
+  data: {fileID: 11400000, guid: 270c2cb16ae0e424195d13d781b364e1, type: 2}
