@@ -51,6 +51,8 @@ public class PlacementManager : MonoBehaviour
     {
         StateLeave();
         storedObject = null;
+        mode = PlacementMode.NoMode;
+
     }
 
     public void OnPlaceObjectRequest(Vector2Int location)
@@ -59,7 +61,6 @@ public class PlacementManager : MonoBehaviour
         {
             placementGrid.PlaceObject(storedObject,location);
             storedObject = CloneObject(storedObject);
-            menuBar.RemoveItem(storedObject);
         }
     }
 
@@ -91,16 +92,13 @@ public class PlacementManager : MonoBehaviour
         if (placementGrid.IsObjectPlaced(location))
         {
             GameObject objectToDestroy = placementGrid.RemoveObject(location);
-            menuBar.AddItem(objectToDestroy);
             Destroy(objectToDestroy);
         }
     }
 
     public void StateLeave()
     {
-        PlacementMode currentMode = mode;
-        mode = PlacementMode.NoMode;
-        switch (currentMode)
+        switch (mode)
         {
             case PlacementMode.Create:
                 menuBar.DeselectAll();
