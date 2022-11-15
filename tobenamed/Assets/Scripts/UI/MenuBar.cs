@@ -54,11 +54,11 @@ public class MenuBar : MonoBehaviour
             var menuItem = itemCells[index].GetComponent<MenuItem>();
             var itemCellGo = itemCells[index];
             if (menuItem.ItemCount == 1) {
+                DeselectAll(); 
                 interactionActions.RemoveAt(index);
                 itemCells.RemoveAt(index);
                 UpdateInteractionListeners(false);
                 AdjustPositions();
-                DeselectAll();
                 Destroy(itemCellGo.gameObject);
             }
             else {

@@ -51,8 +51,6 @@ public class PlacementManager : MonoBehaviour
     {
         StateLeave();
         storedObject = null;
-        mode = PlacementMode.NoMode;
-
     }
 
     public void OnPlaceObjectRequest(Vector2Int location)
@@ -60,8 +58,8 @@ public class PlacementManager : MonoBehaviour
         if (mode == PlacementMode.Create && !placementGrid.IsObjectPlaced(location))
         {
             placementGrid.PlaceObject(storedObject,location);
-            menuBar.RemoveItem(storedObject);
             storedObject = CloneObject(storedObject);
+            menuBar.RemoveItem(storedObject);
         }
     }
 
@@ -100,7 +98,9 @@ public class PlacementManager : MonoBehaviour
 
     public void StateLeave()
     {
-        switch (mode)
+        PlacementMode currentMode = mode;
+        mode = PlacementMode.NoMode;
+        switch (currentMode)
         {
             case PlacementMode.Create:
                 menuBar.DeselectAll();
