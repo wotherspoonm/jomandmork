@@ -8,9 +8,9 @@ public abstract class PlaceableObject : MonoBehaviour
     public PlaceableObjectData data;
 
     public void Select() {
-        gameObject.GetComponent<Renderer>().material = data.material;
+        gameObject.GetComponent<Renderer>().material = data.selectedMaterial;
     }
     public void Deselect() {
-        gameObject.GetComponent<Renderer>().material = data.selectedMaterial;
+        gameObject.GetComponent<Renderer>().material = data.material;
     }
 }
