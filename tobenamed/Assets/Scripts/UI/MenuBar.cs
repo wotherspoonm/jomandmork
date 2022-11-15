@@ -109,7 +109,7 @@ public class MenuBar : MonoBehaviour
         selectedItemIndex = itemIndex;
         itemCells[itemIndex].GetComponent<MenuItem>().SelectItem();
         // Send MenubarSelection event 
-        OnMenubarSelection(new MenubarSelectionEventArgs(itemToSelect));
+        OnMenubarSelection(new MenubarSelectionEventArgs(prefabManager.GetPrefabFromData(itemToSelect.GetComponent<PlaceableObject>().data)));
     }
 
     public void DeselectAll()

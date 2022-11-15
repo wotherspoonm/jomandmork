@@ -600,7 +600,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4a63570ce0568a42b9634d272e8773b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefabManager: {fileID: 0}
+  prefabManager: {fileID: 941203573}
   itemCells: []
   menuBar: {fileID: 394936883}
   itemCellPrefab: {fileID: 6751425439378306988, guid: c899299d3a3d33544af89180790033bf, type: 3}
