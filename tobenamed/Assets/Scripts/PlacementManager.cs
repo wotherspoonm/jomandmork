@@ -60,6 +60,7 @@ public class PlacementManager : MonoBehaviour
         if (mode == PlacementMode.Create && !placementGrid.IsObjectPlaced(location))
         {
             placementGrid.PlaceObject(storedObject,location);
+            menuBar.RemoveItem(storedObject);
             storedObject = CloneObject(storedObject);
         }
     }
@@ -92,6 +93,7 @@ public class PlacementManager : MonoBehaviour
         if (placementGrid.IsObjectPlaced(location))
         {
             GameObject objectToDestroy = placementGrid.RemoveObject(location);
+            menuBar.AddItem(objectToDestroy);
             Destroy(objectToDestroy);
         }
     }
