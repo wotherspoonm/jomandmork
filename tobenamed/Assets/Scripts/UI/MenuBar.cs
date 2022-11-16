@@ -10,7 +10,6 @@ public class MenuBar : MonoBehaviour
 {
     public PrefabManager prefabManager;
     public List<MenuItem> menuItems = new();
-    private List<Action> interactionActions = new();
     public GameObject menuBar;
     public GameObject itemCellPrefab;
     public SmoothFloat widthSF;
@@ -64,7 +63,6 @@ public class MenuBar : MonoBehaviour
             var itemCellGo = menuItems[index];
             if (menuItem.ItemCount == 1) {
                 DeselectAll();
-                interactionActions.RemoveAt(index);
                 menuItems.RemoveAt(index);
                 AdjustPositions();
                 Destroy(itemCellGo.gameObject);
@@ -105,8 +103,6 @@ public class MenuBar : MonoBehaviour
         for (int i = 0; i < menuItems.Count; i++) if (menuItems[i].GetComponent<MenuItem>().IsSelected)
         {
             menuItems[i].GetComponent<MenuItem>().DeselectItem();
-            // On the final itteration, call menubar deselection
-            if(i == menuItems.Count - 1)
             OnMenubarDeselection();
         }
     }
