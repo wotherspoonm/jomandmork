@@ -601,9 +601,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefabManager: {fileID: 941203573}
-  itemCells: []
+  menuItems: []
   menuBar: {fileID: 394936883}
   itemCellPrefab: {fileID: 6751425439378306988, guid: c899299d3a3d33544af89180790033bf, type: 3}
+  selectedItem: {fileID: 0}
 --- !u!1 &438582422
 GameObject:
   m_ObjectHideFlags: 0

@@ -5,19 +5,19 @@ using UnityEngine;
 
 public class InteractableGameObject : MonoBehaviour
 {
-    public Dictionary<KeyCode, Action> keycodeEventDictionary = new();
+    public Dictionary<KeyCode, EventHandler<InteractableGameObjectEventArgs>> keycodeEventDictionary = new();
 
     protected virtual void Interact() {
-        foreach (KeyValuePair<KeyCode, Action> keyValuePair in keycodeEventDictionary) {
+        foreach (KeyValuePair<KeyCode, EventHandler<InteractableGameObjectEventArgs>> keyValuePair in keycodeEventDictionary) {
             KeyCode keycode = keyValuePair.Key;
-            Action action = keyValuePair.Value;
+            EventHandler<InteractableGameObjectEventArgs> eventHandler = keyValuePair.Value;
             if (Input.GetKeyDown(keycode)){
-                action();
+                eventHandler?.Invoke(this, new());
             }
         }
     }
 
-    public void AddInteractionListener(KeyCode keycode, Action action) {
+    public void AddInteractionListener(KeyCode keycode, EventHandler<InteractableGameObjectEventArgs> action) {
         if (!keycodeEventDictionary.ContainsKey(keycode))
         {
             keycodeEventDictionary.Add(keycode, action);
@@ -28,8 +28,11 @@ public class InteractableGameObject : MonoBehaviour
         }
     }
 
-    public void RemoveInteractionListener(KeyCode keycode, Action action) {
+    public void RemoveInteractionListener(KeyCode keycode, EventHandler<InteractableGameObjectEventArgs> action) {
         if (keycodeEventDictionary.ContainsKey(keycode))
             keycodeEventDictionary[keycode] -= action;
     }
+}
+public class InteractableGameObjectEventArgs : EventArgs {
+
 }

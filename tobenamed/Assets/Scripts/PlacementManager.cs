@@ -29,9 +29,9 @@ public class PlacementManager : MonoBehaviour
             {
                 int tempX = x;
                 int tempY = y;
-                placementGrid.tileArray[x,y].GetComponent<PlacementTile>().AddInteractionListener(KeybindManager.Instance.Place, () => OnPlaceObjectRequest(new Vector2Int(tempX, tempY)));
-                placementGrid.tileArray[x,y].GetComponent<PlacementTile>().AddInteractionListener(KeybindManager.Instance.Move, () => OnMoveObjectRequest(new Vector2Int(tempX, tempY)));
-                placementGrid.tileArray[x,y].GetComponent<PlacementTile>().AddInteractionListener(KeybindManager.Instance.Delete, () => OnDeleteObjectRequest(new Vector2Int(tempX, tempY)));
+                placementGrid.tileArray[x,y].GetComponent<PlacementTile>().AddInteractionListener(KeybindManager.Instance.Place, (sender, e) => OnPlaceObjectRequest(new Vector2Int(tempX, tempY)));
+                placementGrid.tileArray[x,y].GetComponent<PlacementTile>().AddInteractionListener(KeybindManager.Instance.Move, (sender, e) => OnMoveObjectRequest(new Vector2Int(tempX, tempY)));
+                placementGrid.tileArray[x,y].GetComponent<PlacementTile>().AddInteractionListener(KeybindManager.Instance.Delete, (sender, e) => OnDeleteObjectRequest(new Vector2Int(tempX, tempY)));
             }
         }
         // Adding Menubar delegates

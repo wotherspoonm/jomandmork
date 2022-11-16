@@ -17,6 +17,7 @@ public class MenuBar : MonoBehaviour
     public const float itemScale = 50;
     public const float itemSeparation = 45;
     public const float menuBarHeight = 90;
+    public MenuItem selectedItem;
     private int? selectedItemIndex = null;
     public bool ItemIsSelected { get { return selectedItemIndex != null; } }
     public EventHandler<MenubarSelectionEventArgs> MenubarSelectionEventHandler;
@@ -40,7 +41,10 @@ public class MenuBar : MonoBehaviour
             newMenuItem.displayItem = Instantiate(prefabManager.GetPrefabFromData(objectToAdd.GetComponent<PlaceableObject>().data), newMenuItem.transform);
             newMenuItem.displayItem.transform.localScale = Vector3.one * newMenuItem.GetComponent<MenuItem>().displayItem.GetComponent<PlaceableObject>().data.menuPreviewSize;
             menuItems.Add(newMenuItem);
-            UpdateInteractionListeners();
+            newMenuItem.AddInteractionListener(KeyCode.Mouse0, (sender, e) => {
+                if(sender is MenuItem menuItem)
+                SelectItem(menuItem);
+            });
             AdjustPositions();
         }
         else {
@@ -62,27 +66,12 @@ public class MenuBar : MonoBehaviour
                 DeselectAll();
                 interactionActions.RemoveAt(index);
                 menuItems.RemoveAt(index);
-                UpdateInteractionListeners();
                 AdjustPositions();
                 Destroy(itemCellGo.gameObject);
             }
             else {
                 menuItem.ItemCount --;
             }
-        }
-    }
-
-    private void UpdateInteractionListeners() {
-        for (int i = interactionActions.Count - 1; i >= 0; i--) {
-            menuItems[i].RemoveInteractionListener(KeyCode.Mouse0, interactionActions[i]);
-        }
-        interactionActions.Clear();
-        for (int i = 0; i < menuItems.Count; i++) {
-            int itemSelectionIndex = i;
-            interactionActions.Add(delegate {
-                SelectItem(itemSelectionIndex);
-            });
-            menuItems[i].AddInteractionListener(KeyCode.Mouse0, interactionActions[i]);
         }
     }
 
@@ -96,23 +85,19 @@ public class MenuBar : MonoBehaviour
     }
 
 
-    public void SelectItem(int itemIndex)
-    {
-        if(selectedItemIndex != null)
-        {
-            menuItems[(int)selectedItemIndex].DeselectItem();
-            if (selectedItemIndex == itemIndex)
-            {
-                // Send MenubarDeselection event
+    public void SelectItem(MenuItem itemToSelect) {
+        if(selectedItem != null) {
+            selectedItem.DeselectItem();
+            // If we are trying to select an object that is already selected, instead deselect it
+            if(selectedItem == itemToSelect) {
+                selectedItem = null;
                 OnMenubarDeselection();
                 return;
             }
         }
-        var itemToSelect = menuItems[itemIndex].displayItem;
-        selectedItemIndex = itemIndex;
-        menuItems[itemIndex].SelectItem();
-        // Send MenubarSelection event 
-        OnMenubarSelection(new MenubarSelectionEventArgs(prefabManager.GetPrefabFromData(itemToSelect.GetComponent<PlaceableObject>().data)));
+        itemToSelect.SelectItem();
+        OnMenubarSelection(new MenubarSelectionEventArgs(prefabManager.GetPrefabFromData(itemToSelect.displayItem.GetComponent<PlaceableObject>().data)));
+        selectedItem = itemToSelect;
     }
 
     public void DeselectAll()
@@ -120,8 +105,10 @@ public class MenuBar : MonoBehaviour
         for (int i = 0; i < menuItems.Count; i++) if (menuItems[i].GetComponent<MenuItem>().IsSelected)
         {
             menuItems[i].GetComponent<MenuItem>().DeselectItem();
+            // On the final itteration, call menubar deselection
+            if(i == menuItems.Count - 1)
+            OnMenubarDeselection();
         }
-        OnMenubarDeselection();
     }
 
     protected virtual void OnMenubarSelection(MenubarSelectionEventArgs eventArgs)
