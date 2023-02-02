@@ -7,10 +7,10 @@ public abstract class PlaceableObject : MonoBehaviour
 {
     public PlaceableObjectData data;
 
-    public void Select() {
+    public virtual void Select() {
         gameObject.GetComponent<Renderer>().material = data.selectedMaterial;
     }
-    public void Deselect() {
+    public virtual void Deselect() {
         gameObject.GetComponent<Renderer>().material = data.material;
     }
 }

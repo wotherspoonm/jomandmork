@@ -4,23 +4,14 @@ using UnityEngine;
 
 public class DebugMenubar : MonoBehaviour
 {
-    public GameObject cubePrefab;
-    public GameObject spherePrefab;
+    public PlaceableObjectData placeableObjectData;
     public MenuBar menuBar;
 
-    public void AddCube() {
-        menuBar.AddItem(cubePrefab);
+    public void AddItem() {
+        menuBar.AddItem(placeableObjectData.prefab);
     }
 
-    public void AddSphere() {
-        menuBar.AddItem(spherePrefab);
-    }
-
-    public void RemoveCube() {
-        menuBar.RemoveItem(cubePrefab);
-    }
-
-    public void RemoveSphere() {
-        menuBar.RemoveItem(spherePrefab);
+    public void RemoveItem() {
+        menuBar.RemoveItem(placeableObjectData.prefab);
     }
 }

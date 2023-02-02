@@ -37,7 +37,7 @@ public class MenuBar : MonoBehaviour
         MenuItem existingItem = menuItems.Find(x => x.displayItemPO.data.name == objectToAdd.GetComponent<PlaceableObject>().data.name);
         if(existingItem == null) {
             MenuItem newMenuItem = Instantiate(itemCellPrefab, menuBar.transform).GetComponent<MenuItem>();
-            newMenuItem.displayItem = Instantiate(prefabManager.GetPrefabFromData(objectToAdd.GetComponent<PlaceableObject>().data), newMenuItem.transform);
+            newMenuItem.displayItem = Instantiate(objectToAdd.GetComponent<PlaceableObject>().data.prefab, newMenuItem.transform);
             newMenuItem.displayItem.transform.localScale = Vector3.one * newMenuItem.GetComponent<MenuItem>().displayItem.GetComponent<PlaceableObject>().data.menuPreviewSize;
             menuItems.Add(newMenuItem);
             newMenuItem.AddInteractionListener(KeyCode.Mouse0, (sender, e) => {
@@ -94,7 +94,7 @@ public class MenuBar : MonoBehaviour
             }
         }
         itemToSelect.SelectItem();
-        OnMenubarSelection(new MenubarSelectionEventArgs(prefabManager.GetPrefabFromData(itemToSelect.displayItem.GetComponent<PlaceableObject>().data)));
+        OnMenubarSelection(new MenubarSelectionEventArgs(itemToSelect.displayItem.GetComponent<PlaceableObject>().data.prefab));
         selectedItem = itemToSelect;
     }
 

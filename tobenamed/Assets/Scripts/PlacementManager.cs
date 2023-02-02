@@ -14,25 +14,21 @@ public class PlacementManager : MonoBehaviour
     public PlacementGrid placementGrid;
     public MenuBar menuBar;
     [CanBeNull] private GameObject storedObject;
-    private Vector2Int storedObjectOriginalPosition;
+    private int storedObjectOriginalPosition;
     private Vector3 screenPosition;
     private Vector3 worldPosition;
 
     void Start()
     {
-        placementGrid.Initialise();
+        //placementGrid.Initialise();
         mode = PlacementMode.NoMode;
         // Setting delegates for placement tiles
-        for (int x = 0; x < placementGrid.gridSize.x; x++)
+        for (int j = 0; j < placementGrid.tileList.Count; j++)
         {
-            for (int y = 0; y < placementGrid.gridSize.y; y++)
-            {
-                int tempX = x;
-                int tempY = y;
-                placementGrid.tileArray[x,y].GetComponent<PlacementTile>().AddInteractionListener(KeybindManager.Instance.Place, (sender, e) => OnPlaceObjectRequest(new Vector2Int(tempX, tempY)));
-                placementGrid.tileArray[x,y].GetComponent<PlacementTile>().AddInteractionListener(KeybindManager.Instance.Move, (sender, e) => OnMoveObjectRequest(new Vector2Int(tempX, tempY)));
-                placementGrid.tileArray[x,y].GetComponent<PlacementTile>().AddInteractionListener(KeybindManager.Instance.Delete, (sender, e) => OnDeleteObjectRequest(new Vector2Int(tempX, tempY)));
-            }
+            int i = j;
+            placementGrid.tileList[i].GetComponent<PlacementTile>().AddInteractionListener(KeybindManager.Instance.Place, (sender, e) => OnPlaceObjectRequest(i));
+            placementGrid.tileList[i].GetComponent<PlacementTile>().AddInteractionListener(KeybindManager.Instance.Move, (sender, e) => OnMoveObjectRequest(i));
+            placementGrid.tileList[i].GetComponent<PlacementTile>().AddInteractionListener(KeybindManager.Instance.Delete, (sender, e) => OnDeleteObjectRequest(i));
         }
         // Adding Menubar delegates
         menuBar.MenubarSelectionEventHandler += OnMenubarSelection;
@@ -55,44 +51,44 @@ public class PlacementManager : MonoBehaviour
 
     }
 
-    public void OnPlaceObjectRequest(Vector2Int location)
+    public void OnPlaceObjectRequest(int index)
     {
-        if (mode == PlacementMode.Create && !placementGrid.IsObjectPlaced(location))
+        if (mode == PlacementMode.Create && !placementGrid.IsObjectPlaced(index))
         {
-            placementGrid.PlaceObject(storedObject,location);
+            placementGrid.PlaceObject(storedObject,index);
             storedObject = CloneObject(storedObject);
             menuBar.RemoveItem(storedObject);
         }
     }
 
-    public void OnMoveObjectRequest(Vector2Int location)
+    public void OnMoveObjectRequest(int index)
     {
         if (mode == PlacementMode.Move)
         {
-            if (!placementGrid.IsObjectPlaced(location))
+            if (!placementGrid.IsObjectPlaced(index))
             {
-                placementGrid.PlaceObject(storedObject,location);
+                placementGrid.PlaceObject(storedObject, index);
                 mode = PlacementMode.NoMode;
                 storedObject = null;
             }
         }
         else
         {
-            if (placementGrid.IsObjectPlaced(location))
+            if (placementGrid.IsObjectPlaced(index))
             {
                 StateLeave();
-                storedObject = placementGrid.RemoveObject(location);
-                storedObjectOriginalPosition = location;
+                storedObject = placementGrid.RemoveObject(index);
+                storedObjectOriginalPosition = index;
                 mode = PlacementMode.Move;
             }
         }
     }
 
-    public void OnDeleteObjectRequest(Vector2Int location)
+    public void OnDeleteObjectRequest(int index)
     {
-        if (placementGrid.IsObjectPlaced(location))
+        if (placementGrid.IsObjectPlaced(index))
         {
-            GameObject objectToDestroy = placementGrid.RemoveObject(location);
+            GameObject objectToDestroy = placementGrid.RemoveObject(index);
             menuBar.AddItem(objectToDestroy);
             Destroy(objectToDestroy);
         }
