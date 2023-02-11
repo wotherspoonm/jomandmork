@@ -8,9 +8,9 @@ using TMPro;
 
 public class MenuItem : InteractableGameObject, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler
 {
-    bool isSelected;
+    private bool isSelected;
     public bool IsSelected { get { return isSelected; } }
-    public GameObject displayItem;
+    public GameObject displayGameObject;
     private DEAnimator animator;
     public PlaceableObject displayItemPO;
     [SerializeField]
@@ -23,17 +23,17 @@ public class MenuItem : InteractableGameObject, IPointerEnterHandler, IPointerEx
 
     private void Start() {
         // Setup button and add  click listener
-        displayItemPO = displayItem.GetComponent<PlaceableObject>();
-        animator = displayItem.AddComponent<DEAnimator>();
-        defaultRotation = displayItem.transform.rotation.eulerAngles;
+        displayItemPO = displayGameObject.GetComponent<PlaceableObject>();
+        animator = displayGameObject.AddComponent<DEAnimator>();
+        defaultRotation = displayGameObject.transform.rotation.eulerAngles;
     }
 
-    public void SelectItem() {
+    public void ShowAsSelected() {
         isSelected = true;
         displayItemPO.Select();
         animator.SetSpin(spinspeed);
     }
-    public void DeselectItem() {
+    public void ShowAsDeselected() {
         isSelected = false;
         displayItemPO.Deselect();
         animator.SetSpin(0);

@@ -12,7 +12,7 @@ public class PlacementManager : MonoBehaviour
 {
     public PlacementMode mode;
     public PlacementGrid placementGrid;
-    public MenuBar menuBar;
+    public Menubar menubar;
     [CanBeNull] private GameObject storedObject;
     private int _storedObjectOriginalPosition;
     private Vector3 _screenPosition;
@@ -31,24 +31,21 @@ public class PlacementManager : MonoBehaviour
             placementGrid.tileList[i].GetComponent<PlacementTile>().AddInteractionListener(KeybindManager.Instance.Delete, (sender, e) => OnDeleteObjectRequest(i));
         }
         // Adding Menubar delegates
-        menuBar.MenubarSelectionEventHandler += OnMenubarSelection;
-        menuBar.MenubarDeselectionEventHandler += OnMenubarDeselection;
+        menubar.MenubarSelectionEventHandler += OnMenubarSelection;
+        menubar.MenubarDeselectionEventHandler += OnMenubarDeselection;
     }
 
-    public void OnMenubarSelection(object sender, MenubarSelectionEventArgs e)
-    {
+    public void OnMenubarSelection(object sender, MenubarSelectionEventArgs2 e) {
         if (mode != PlacementMode.Create) StateLeave();
         if (storedObject != null) Destroy(storedObject);
         mode = PlacementMode.Create;
-        storedObject = CloneObject(e.gameObjectToSelect);
+        storedObject = CloneObject(e.objectToSelect.prefab);
     }
 
-    public void OnMenubarDeselection(object sender, MenubarSelectionEventArgs e)
-    {
+    public void OnMenubarDeselection(object sender, MenubarSelectionEventArgs2 e) {
         StateLeave();
         storedObject = null;
         mode = PlacementMode.NoMode;
-
     }
 
     public void OnPlaceObjectRequest(int index)
@@ -57,7 +54,7 @@ public class PlacementManager : MonoBehaviour
         {
             placementGrid.PlaceObject(storedObject,index);
             storedObject = CloneObject(storedObject);
-            menuBar.RemoveItem(storedObject);
+            menubar.RemoveItem(storedObject.GetComponent<PlaceableObject>().data);
         }
     }
 
@@ -89,7 +86,7 @@ public class PlacementManager : MonoBehaviour
         if (placementGrid.IsObjectPlaced(index))
         {
             GameObject objectToDestroy = placementGrid.RemoveObject(index);
-            menuBar.AddItem(objectToDestroy);
+            menubar.AddItem(objectToDestroy.GetComponent<PlaceableObject>().data);
             Destroy(objectToDestroy);
         }
     }
@@ -99,7 +96,7 @@ public class PlacementManager : MonoBehaviour
         switch (mode)
         {
             case PlacementMode.Create:
-                menuBar.DeselectAll();
+                menubar.DeselectItem();
                 Destroy(storedObject);
                 break;
             case PlacementMode.Move:

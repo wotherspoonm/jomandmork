@@ -1,129 +1,74 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
-public class MenuBar : MonoBehaviour
+public class Menubar : MonoBehaviour
 {
-    public PrefabManager prefabManager;
-    public List<MenuItem> menuItems = new();
-    public GameObject menuBar;
-    public GameObject itemCellPrefab;
-    public SmoothFloat widthSF;
-    public const float itemScale = 50;
-    public const float itemSeparation = 45;
-    public const float menuBarHeight = 90;
-    public MenuItem selectedItem;
-    private int? selectedItemIndex = null;
-    public bool ItemIsSelected { get { return selectedItemIndex != null; } }
-    public EventHandler<MenubarSelectionEventArgs> MenubarSelectionEventHandler;
-    public EventHandler<MenubarSelectionEventArgs> MenubarDeselectionEventHandler;
+    public Dictionary<PlaceableObjectData, int> menubarItemCountPairs = new();
+    private PlaceableObjectData _selectedObject; // Can be null. Null indicates no selected item.
+    public PlaceableObjectData SelectedObject => _selectedObject;
+    public bool ItemIsSelected => _selectedObject != null;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        widthSF = new SmoothFloat(0, 1, 1, 1);
-        // Set menu bar size  and position based on the number of items
-        var menuRectTransform = menuBar.GetComponent<RectTransform>();
-        menuRectTransform.sizeDelta = new Vector2((itemSeparation + itemScale) * (menuItems.Count) + itemSeparation, menuBarHeight);
-        menuRectTransform.anchoredPosition3D = new Vector3(menuRectTransform.anchoredPosition3D.x, menuRectTransform.anchoredPosition3D.y, itemScale);
-    }
+    // Event Handlers
+    public EventHandler<ItemQuantityChangedEventArgs> ItemQuantityChangedEventHandler;
+    public EventHandler<MenubarSelectionEventArgs2> MenubarSelectionEventHandler;
+    public EventHandler<MenubarSelectionEventArgs2> MenubarDeselectionEventHandler;
 
-    public void AddItem(GameObject objectToAdd) {
-        // Find existing item of the same type on the menubar
-        MenuItem existingItem = menuItems.Find(x => x.displayItemPO.data.name == objectToAdd.GetComponent<PlaceableObject>().data.name);
-        if(existingItem == null) {
-            MenuItem newMenuItem = Instantiate(itemCellPrefab, menuBar.transform).GetComponent<MenuItem>();
-            newMenuItem.displayItem = Instantiate(objectToAdd.GetComponent<PlaceableObject>().data.prefab, newMenuItem.transform);
-            newMenuItem.displayItem.transform.localScale = Vector3.one * newMenuItem.GetComponent<MenuItem>().displayItem.GetComponent<PlaceableObject>().data.menuPreviewSize;
-            menuItems.Add(newMenuItem);
-            newMenuItem.AddInteractionListener(KeyCode.Mouse0, (sender, e) => {
-                if(sender is MenuItem menuItem)
-                SelectItem(menuItem);
-            });
-            AdjustPositions();
+    public void AddItem(PlaceableObjectData placeableObjectData, int amount = 1) {
+        if (menubarItemCountPairs.ContainsKey(placeableObjectData)) {
+            menubarItemCountPairs[placeableObjectData] += amount;
         }
         else {
-            existingItem.ItemCount++;
+            menubarItemCountPairs.Add(placeableObjectData, amount);
         }
+        // Send the event
+        ItemQuantityChangedEventHandler?.Invoke(this, new(placeableObjectData, amount));
     }
-
-    public void RemoveItem(GameObject objectToRemove) {
-        // Find existing item of the same type on the menubar
-        MenuItem existingItem = menuItems.Find(x => x.displayItemPO.data.name == objectToRemove.GetComponent<PlaceableObject>().data.name);
-        if(existingItem == null) {
-            Debug.LogWarning("Tried to remove item that does not exist");
+    public void RemoveItem(PlaceableObjectData placeableObjectData, int amount = 1) {
+        if(!menubarItemCountPairs.ContainsKey(placeableObjectData)) {
+            throw new Exception("Tried to remove item that does not exist");
+        }
+        int itemCount = menubarItemCountPairs[placeableObjectData];
+        if (itemCount < amount) {
+            throw new Exception("Tried to remove more items than exist");
+        }
+        if (itemCount > amount) {
+            menubarItemCountPairs[placeableObjectData] -= amount;
         }
         else {
-            int index = menuItems.FindIndex(x => x.displayItemPO.data.name == objectToRemove.GetComponent<PlaceableObject>().data.name);
-            var menuItem = menuItems[index];
-            var itemCellGo = menuItems[index];
-            if (menuItem.ItemCount == 1) {
-                DeselectAll();
-                menuItems.RemoveAt(index);
-                AdjustPositions();
-                Destroy(itemCellGo.gameObject);
-            }
-            else {
-                menuItem.ItemCount --;
-            }
+            DeselectItem();
+            menubarItemCountPairs.Remove(placeableObjectData);
         }
+        // Send the event
+        ItemQuantityChangedEventHandler?.Invoke(this, new(placeableObjectData, -amount));
     }
-
-    private void AdjustPositions() {
-        for (int i = 0; i < menuItems.Count; i++) {
-            float instanceSpacing = (itemSeparation + itemScale);
-            float firstCoord = -(menuItems.Count - 1) * instanceSpacing * 0.5f;
-            menuItems[i].GetComponent<DEAnimator>().MoveTo(new(firstCoord + i*instanceSpacing,0,-itemScale));
-            //itemCells[i].GetComponent<DEAnimator>().MoveTo(new(i * (itemSeparation + itemScale) + 0.5f * itemScale + itemSeparation, 0, -itemScale));
-        }
+    public void SelectItem(PlaceableObjectData placeableObjectData) {
+        if (ItemIsSelected) DeselectItem();
+        _selectedObject = placeableObjectData;
+        MenubarSelectionEventHandler?.Invoke(this, new(placeableObjectData));
     }
-
-
-    public void SelectItem(MenuItem itemToSelect) {
-        if(selectedItem != null) {
-            selectedItem.DeselectItem();
-            // If we are trying to select an object that is already selected, instead deselect it
-            if(selectedItem == itemToSelect) {
-                selectedItem = null;
-                OnMenubarDeselection();
-                return;
-            }
-        }
-        itemToSelect.SelectItem();
-        OnMenubarSelection(new MenubarSelectionEventArgs(itemToSelect.displayItem.GetComponent<PlaceableObject>().data.prefab));
-        selectedItem = itemToSelect;
-    }
-
-    public void DeselectAll()
-    {
-        for (int i = 0; i < menuItems.Count; i++) if (menuItems[i].GetComponent<MenuItem>().IsSelected)
-        {
-            menuItems[i].GetComponent<MenuItem>().DeselectItem();
-            OnMenubarDeselection();
-        }
-    }
-
-    protected virtual void OnMenubarSelection(MenubarSelectionEventArgs eventArgs)
-    {
-        MenubarSelectionEventHandler?.Invoke(this, eventArgs);
-    }
-
-    protected virtual void OnMenubarDeselection()
-    {
-        selectedItemIndex = null;
-        MenubarDeselectionEventHandler?.Invoke(this, null);
+    public void DeselectItem() {
+        if (_selectedObject == null) return;
+        var objectToDeselect = _selectedObject;
+        _selectedObject = null;
+        MenubarDeselectionEventHandler?.Invoke(this, new(objectToDeselect));
     }
 }
 
-public class MenubarSelectionEventArgs : EventArgs
-{
-    public MenubarSelectionEventArgs(GameObject gameObjectToSelect)
-    {
-        this.gameObjectToSelect = gameObjectToSelect;
+public class ItemQuantityChangedEventArgs : EventArgs {
+    public PlaceableObjectData placeableObjectData;
+    public int amount;
+
+    public ItemQuantityChangedEventArgs(PlaceableObjectData placeableObjectData, int amount) {
+        this.placeableObjectData = placeableObjectData;
+        this.amount = amount;
     }
-    public GameObject gameObjectToSelect;
+}
+public class MenubarSelectionEventArgs2 : EventArgs {
+    public MenubarSelectionEventArgs2(PlaceableObjectData objectToSelect) {
+        this.objectToSelect = objectToSelect;
+    }
+    public PlaceableObjectData objectToSelect;
 }

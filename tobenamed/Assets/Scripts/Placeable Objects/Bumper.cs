@@ -11,7 +11,6 @@ public class Bumper : PlaceableObject
         _inspectorFields.Add(new SliderInspectorField(GetAngle,SetAngle,"Angle",360));
     }
     private void OnTriggerEnter2D(Collider2D collision) {
-        Debug.Log("Bumper!");
         Astronaut ast;
         if(collision.TryGetComponent(out ast)) {
             ast.ReflectAbout(_surfaceNormal);

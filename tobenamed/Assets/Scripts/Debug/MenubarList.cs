@@ -11,13 +11,13 @@ namespace CustomDebug {
         [SerializeField]
         private GameObject contentContainer;
         [SerializeField]
-        private MenuBar menuBar;
+        private Menubar menuBar2;
 
         private void Awake() {
             foreach (PlaceableObjectData data in placeableObjectData) {
                 GameObject obj = Instantiate(listItemPrefab, contentContainer.transform);
                 obj.GetComponent<MenubarListItem>().placeableObjectData = data;
-                obj.GetComponent<MenubarListItem>().menuBar = menuBar;
+                obj.GetComponent<MenubarListItem>().menubar2 = menuBar2;
             }
         }
     }

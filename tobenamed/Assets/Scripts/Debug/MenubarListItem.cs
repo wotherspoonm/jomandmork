@@ -6,18 +6,18 @@ using TMPro;
 namespace CustomDebug {
     public class MenubarListItem : MonoBehaviour {
         public PlaceableObjectData placeableObjectData;
-        public MenuBar menuBar;
+        public Menubar menubar2;
         public TextMeshProUGUI textMeshPro;
 
         public void Start() {
             textMeshPro.text = placeableObjectData.name;
         }
         public void AddItem() {
-            menuBar.AddItem(placeableObjectData.prefab);
+            menubar2.AddItem(placeableObjectData);
         }
 
         public void RemoveItem() {
-            menuBar.RemoveItem(placeableObjectData.prefab);
+            menubar2.AddItem(placeableObjectData);
         }
     }
 }
