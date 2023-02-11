@@ -14,9 +14,9 @@ public class PlacementManager : MonoBehaviour
     public PlacementGrid placementGrid;
     public MenuBar menuBar;
     [CanBeNull] private GameObject storedObject;
-    private int storedObjectOriginalPosition;
-    private Vector3 screenPosition;
-    private Vector3 worldPosition;
+    private int _storedObjectOriginalPosition;
+    private Vector3 _screenPosition;
+    private Vector3 _worldPosition;
 
     void Start()
     {
@@ -78,7 +78,7 @@ public class PlacementManager : MonoBehaviour
             {
                 StateLeave();
                 storedObject = placementGrid.RemoveObject(index);
-                storedObjectOriginalPosition = index;
+                _storedObjectOriginalPosition = index;
                 mode = PlacementMode.Move;
             }
         }
@@ -103,7 +103,7 @@ public class PlacementManager : MonoBehaviour
                 Destroy(storedObject);
                 break;
             case PlacementMode.Move:
-                placementGrid.PlaceObject(storedObject,storedObjectOriginalPosition);
+                placementGrid.PlaceObject(storedObject,_storedObjectOriginalPosition);
                 storedObject = null;
                 break;
         }
@@ -113,14 +113,14 @@ public class PlacementManager : MonoBehaviour
         //Code to make object follow position of mouse
         if (mode != PlacementMode.NoMode && storedObject != null)
         {
-            screenPosition = Input.mousePosition;
-            Ray ray = Camera.main.ScreenPointToRay(screenPosition);
+            _screenPosition = Input.mousePosition;
+            Ray ray = Camera.main.ScreenPointToRay(_screenPosition);
             if (Physics.Raycast(ray, out RaycastHit hitData))
             {
-                worldPosition = hitData.point;
+                _worldPosition = hitData.point;
             }
-            worldPosition.z = storedObject.transform.position.z;
-            storedObject.transform.position = worldPosition;
+            _worldPosition.z = storedObject.transform.position.z;
+            storedObject.transform.position = _worldPosition;
         }
     }
 
