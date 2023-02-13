@@ -8,6 +8,7 @@ public class PlaceableObjectData : ScriptableObject
 {
     public Material material;
     public Material selectedMaterial;
+    public Material ghostMaterial;
     public GameObject prefab;
     public float menuPreviewSize;
 }

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class Menubar : MonoBehaviour
+public class MenuBar : MonoBehaviour
 {
     public Dictionary<PlaceableObjectData, int> menubarItemCountPairs = new();
     private PlaceableObjectData _selectedObject; // Can be null. Null indicates no selected item.

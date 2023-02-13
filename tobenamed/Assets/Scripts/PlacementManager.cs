@@ -12,8 +12,8 @@ public class PlacementManager : MonoBehaviour
 {
     public PlacementMode mode;
     public PlacementGrid placementGrid;
-    public Menubar menubar;
-    [CanBeNull] private GameObject storedObject;
+    public MenuBar menubar;
+    [CanBeNull] private PlaceableObject storedObject;
     private int _storedObjectOriginalPosition;
     private Vector3 _screenPosition;
     private Vector3 _worldPosition;
@@ -29,17 +29,23 @@ public class PlacementManager : MonoBehaviour
             placementGrid.tileList[i].GetComponent<PlacementTile>().AddInteractionListener(KeybindManager.Instance.Place, (sender, e) => OnPlaceObjectRequest(i));
             placementGrid.tileList[i].GetComponent<PlacementTile>().AddInteractionListener(KeybindManager.Instance.Move, (sender, e) => OnMoveObjectRequest(i));
             placementGrid.tileList[i].GetComponent<PlacementTile>().AddInteractionListener(KeybindManager.Instance.Delete, (sender, e) => OnDeleteObjectRequest(i));
+            placementGrid.tileList[i].GetComponent<PlacementTile>().OnTileMouseEnter += (sender, e) => OnTileMouseEnter(i);
         }
         // Adding Menubar delegates
         menubar.MenubarSelectionEventHandler += OnMenubarSelection;
         menubar.MenubarDeselectionEventHandler += OnMenubarDeselection;
     }
 
+    public void OnTileMouseEnter(int index) {
+        if ((mode == PlacementMode.Create || mode == PlacementMode.Move) && !placementGrid.IsObjectPlaced(index)) {
+            placementGrid.SpawnGhostObject(storedObject, index);
+        }
+    }
+
     public void OnMenubarSelection(object sender, MenubarSelectionEventArgs2 e) {
         if (mode != PlacementMode.Create) StateLeave();
-        if (storedObject != null) Destroy(storedObject);
         mode = PlacementMode.Create;
-        storedObject = CloneObject(e.objectToSelect.prefab);
+        storedObject = e.objectToSelect.prefab.GetComponent<PlaceableObject>();
     }
 
     public void OnMenubarDeselection(object sender, MenubarSelectionEventArgs2 e) {
@@ -53,7 +59,6 @@ public class PlacementManager : MonoBehaviour
         if (mode == PlacementMode.Create && !placementGrid.IsObjectPlaced(index))
         {
             placementGrid.PlaceObject(storedObject,index);
-            storedObject = CloneObject(storedObject);
             menubar.RemoveItem(storedObject.GetComponent<PlaceableObject>().data);
         }
     }
@@ -65,6 +70,7 @@ public class PlacementManager : MonoBehaviour
             if (!placementGrid.IsObjectPlaced(index))
             {
                 placementGrid.PlaceObject(storedObject, index);
+                Destroy(storedObject.gameObject);
                 mode = PlacementMode.NoMode;
                 storedObject = null;
             }
@@ -76,6 +82,8 @@ public class PlacementManager : MonoBehaviour
                 StateLeave();
                 storedObject = placementGrid.RemoveObject(index);
                 _storedObjectOriginalPosition = index;
+                storedObject.gameObject.SetActive(false);
+                placementGrid.SpawnGhostObject(storedObject, index);
                 mode = PlacementMode.Move;
             }
         }
@@ -85,9 +93,9 @@ public class PlacementManager : MonoBehaviour
     {
         if (placementGrid.IsObjectPlaced(index))
         {
-            GameObject objectToDestroy = placementGrid.RemoveObject(index);
-            menubar.AddItem(objectToDestroy.GetComponent<PlaceableObject>().data);
-            Destroy(objectToDestroy);
+            PlaceableObject objectToDestroy = placementGrid.RemoveObject(index);
+            menubar.AddItem(objectToDestroy.data);
+            Destroy(objectToDestroy.gameObject);
         }
     }
 
@@ -97,36 +105,12 @@ public class PlacementManager : MonoBehaviour
         {
             case PlacementMode.Create:
                 menubar.DeselectItem();
-                Destroy(storedObject);
                 break;
             case PlacementMode.Move:
                 placementGrid.PlaceObject(storedObject,_storedObjectOriginalPosition);
+                Destroy(storedObject.gameObject);
                 storedObject = null;
                 break;
         }
-    }
-    void Update()
-    {
-        //Code to make object follow position of mouse
-        if (mode != PlacementMode.NoMode && storedObject != null)
-        {
-            _screenPosition = Input.mousePosition;
-            Ray ray = Camera.main.ScreenPointToRay(_screenPosition);
-            if (Physics.Raycast(ray, out RaycastHit hitData))
-            {
-                _worldPosition = hitData.point;
-            }
-            _worldPosition.z = storedObject.transform.position.z;
-            storedObject.transform.position = _worldPosition;
-        }
-    }
-
-    public GameObject CloneObject(GameObject objectToClone)
-    {
-        Vector3 spawnPosition = placementGrid.transform.position;
-        spawnPosition += new Vector3(0, 0, PlacementTile.distanceFromGrid);
-        Quaternion spawnRotation = new();
-        GameObject result = Instantiate(objectToClone, spawnPosition, spawnRotation);
-        return result;
     }
 }
