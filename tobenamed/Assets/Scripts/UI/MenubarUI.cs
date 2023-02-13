@@ -7,7 +7,7 @@ using UnityEngine;
 
 public class MenubarUI : MonoBehaviour
 {
-    [SerializeField] private Menubar _menubar;
+    [SerializeField] private MenuBar _menubar;
     public Dictionary<PlaceableObjectData, MenuItem> menuItemPODataMap = new();
     [SerializeField] private GameObject _menuItemPrefab;
     public SmoothFloat widthSF;

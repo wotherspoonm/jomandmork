@@ -6,7 +6,7 @@ using TMPro;
 namespace CustomDebug {
     public class MenubarListItem : MonoBehaviour {
         public PlaceableObjectData placeableObjectData;
-        public Menubar menubar2;
+        public MenuBar menubar2;
         public TextMeshProUGUI textMeshPro;
 
         public void Start() {

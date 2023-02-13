@@ -18,12 +18,16 @@ public class PlacementGrid : MonoBehaviour
         return tileList[index].GetComponent<PlacementTile>().objectPlaced;
     }
 
-    public void PlaceObject(GameObject objectToPlace, int index)
+    public void PlaceObject(PlaceableObject objectToPlace, int index)
     {
         tileList[index].GetComponent<PlacementTile>().PlaceObject(objectToPlace);
     }
 
-    public GameObject RemoveObject(int index)
+    public void SpawnGhostObject(PlaceableObject objectToSpawn, int index) {
+        tileList[index].GetComponent<PlacementTile>().SpawnGhostObject(objectToSpawn);
+    }
+
+    public PlaceableObject RemoveObject(int index)
     {
         return tileList[index].GetComponent<PlacementTile>().RemoveObject();
     }

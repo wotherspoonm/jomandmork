@@ -11,7 +11,7 @@ namespace CustomDebug {
         [SerializeField]
         private GameObject contentContainer;
         [SerializeField]
-        private Menubar menuBar2;
+        private MenuBar menuBar2;
 
         private void Awake() {
             foreach (PlaceableObjectData data in placeableObjectData) {
