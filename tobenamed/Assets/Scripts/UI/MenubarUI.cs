@@ -8,7 +8,7 @@ using UnityEngine;
 public class MenubarUI : MonoBehaviour
 {
     [SerializeField] private MenuBar _menubar;
-    public Dictionary<PlaceableObjectData, MenuItem> menuItemPODataMap = new();
+    public Dictionary<PlaceableObjectSO, MenuItem> menuItemPODataMap = new();
     [SerializeField] private GameObject _menuItemPrefab;
     public SmoothFloat widthSF;
     public const float itemScale = 50;
@@ -28,7 +28,7 @@ public class MenubarUI : MonoBehaviour
         menuRectTransform.sizeDelta = new Vector2((itemSeparation + itemScale) * (menuItemPODataMap.Count) + itemSeparation, menuBarHeight);
         menuRectTransform.anchoredPosition3D = new Vector3(menuRectTransform.anchoredPosition3D.x, menuRectTransform.anchoredPosition3D.y, itemScale);
     }
-    public void AddItem(PlaceableObjectData placeableObjectData, int amount = 1) {
+    public void AddItem(PlaceableObjectSO placeableObjectData, int amount = 1) {
         if(menuItemPODataMap.ContainsKey(placeableObjectData)) {
             menuItemPODataMap[placeableObjectData].ItemCount += amount;
         }
@@ -45,7 +45,7 @@ public class MenubarUI : MonoBehaviour
         }
     }
 
-    public void RemoveItem(PlaceableObjectData placeableObjectData, int amount = 1) {
+    public void RemoveItem(PlaceableObjectSO placeableObjectData, int amount = 1) {
         if (!menuItemPODataMap.ContainsKey(placeableObjectData)) {
             throw new Exception("Tried to remove item that does not exist");
         }
@@ -78,10 +78,10 @@ public class MenubarUI : MonoBehaviour
         menuRectTransform.anchoredPosition3D = new Vector3(menuRectTransform.anchoredPosition3D.x, menuRectTransform.anchoredPosition3D.y, itemScale);
     }
 
-    public void SelectItem(PlaceableObjectData placeableObjectData) {
+    public void SelectItem(PlaceableObjectSO placeableObjectData) {
         menuItemPODataMap[placeableObjectData].ShowAsSelected();
     }
-    public void DeselectItem(PlaceableObjectData placeableObjectData) {
+    public void DeselectItem(PlaceableObjectSO placeableObjectData) {
         menuItemPODataMap[placeableObjectData].ShowAsDeselected();
     }
     protected virtual void OnMenubarDeselection(object sender, MenubarSelectionEventArgs2 e) {

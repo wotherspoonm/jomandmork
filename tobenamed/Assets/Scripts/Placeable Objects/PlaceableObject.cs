@@ -6,7 +6,7 @@ using UnityEngine;
 
 public abstract class PlaceableObject : MonoBehaviour 
 {
-    public PlaceableObjectData data;
+    public PlaceableObjectSO data;
 
 
     // Inspecor Related

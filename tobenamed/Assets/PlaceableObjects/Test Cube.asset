@@ -14,5 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   material: {fileID: 2100000, guid: 051e9361acc3b7141a4bb7d87addd762, type: 2}
   selectedMaterial: {fileID: 2100000, guid: 0ae2f5ea5385a9249bda337b58c11f28, type: 2}
+  ghostMaterial: {fileID: 2100000, guid: 949c1f4fbc43f2645aad5b7b071dea47, type: 2}
   prefab: {fileID: 1213956642485943509, guid: fe8a8d916e7aa484f8754ece571b19a1, type: 3}
   menuPreviewSize: 50

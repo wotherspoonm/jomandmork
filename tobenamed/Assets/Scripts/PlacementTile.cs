@@ -8,13 +8,14 @@ using UnityEngine;
 
 public class PlacementTile : InteractableGameObject
 {
-    public Material defaultMaterial;
-    public Material glowingMaterial;
+    [SerializeField] private Material defaultMaterial;
+    [SerializeField] private Material glowingMaterial;
+
     new Renderer renderer;
-    public bool objectPlaced = false;
-    public bool ghostObjectSpawned = false;
-    public PlaceableObject ghostObject;
-    public PlaceableObject placedObject;
+    private bool objectPlaced = false;
+    private bool ghostObjectSpawned = false;
+    private PlaceableObject ghostObject;
+    private PlaceableObject placedObject;
     public static float distanceFromGrid = 2f;
 
     public event EventHandler OnTileMouseEnter;
@@ -50,9 +51,36 @@ public class PlacementTile : InteractableGameObject
         }
     }
 
+    public void SpawnGhostObject(PlaceableObjectSO placeableObjectSO) {
+        if (!objectPlaced) {
+            ghostObject = CloneObject(placeableObjectSO.prefab.GetComponent<PlaceableObject>());
+
+            Quaternion newRotation = new();
+            ghostObject.transform.rotation = newRotation;
+
+            ghostObject.GetComponent<Renderer>().material = placeableObjectSO.ghostMaterial;
+            ghostObjectSpawned = true;
+        }
+    }
+
     public void PlaceObject(PlaceableObject placeableObject) {
         if (!objectPlaced) {
             placedObject = CloneObject(placeableObject);
+            if (ghostObjectSpawned) {
+                Destroy(ghostObject.gameObject);
+                ghostObjectSpawned = false;
+            }
+            objectPlaced = true;
+        }
+    }
+
+    public void PlaceObject(PlaceableObjectSO placeableObjectSO) {
+        if (!objectPlaced) {
+            placedObject = CloneObject(placeableObjectSO.prefab.GetComponent<PlaceableObject>());
+
+            Quaternion newRotation = new();
+            placedObject.transform.rotation = newRotation;
+
             if (ghostObjectSpawned) {
                 Destroy(ghostObject.gameObject);
                 ghostObjectSpawned = false;
@@ -67,12 +95,18 @@ public class PlacementTile : InteractableGameObject
         return placedObject;
     }
 
-    public PlaceableObject CloneObject(PlaceableObject objectToClone) {
+    private PlaceableObject CloneObject(PlaceableObject objectToClone) {
+        GameObject result = Instantiate(objectToClone.gameObject);
+
         Vector3 spawnPosition = transform.position;
         spawnPosition += new Vector3(0, 0, distanceFromGrid);
-        Quaternion spawnRotation = new();
-        GameObject result = Instantiate(objectToClone.gameObject, spawnPosition, spawnRotation);
+        result.transform.position = spawnPosition;
+
         result.SetActive(true);
         return result.GetComponent<PlaceableObject>();
+    }
+
+    public bool IsObjectPlaced() {
+        return objectPlaced;
     }
 }

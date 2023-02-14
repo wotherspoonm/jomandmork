@@ -5,7 +5,7 @@ using UnityEngine;
 namespace CustomDebug {
     public class MenubarList : MonoBehaviour {
         [SerializeField]
-        private List<PlaceableObjectData> placeableObjectData;
+        private List<PlaceableObjectSO> placeableObjectData;
         [SerializeField]
         private GameObject listItemPrefab;
         [SerializeField]
@@ -14,7 +14,7 @@ namespace CustomDebug {
         private MenuBar menuBar2;
 
         private void Awake() {
-            foreach (PlaceableObjectData data in placeableObjectData) {
+            foreach (PlaceableObjectSO data in placeableObjectData) {
                 GameObject obj = Instantiate(listItemPrefab, contentContainer.transform);
                 obj.GetComponent<MenubarListItem>().placeableObjectData = data;
                 obj.GetComponent<MenubarListItem>().menubar2 = menuBar2;

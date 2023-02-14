@@ -4,7 +4,7 @@ using UnityEditor;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "New Placeable Object", menuName = "Placeable Object")]
-public class PlaceableObjectData : ScriptableObject
+public class PlaceableObjectSO : ScriptableObject
 {
     public Material material;
     public Material selectedMaterial;
