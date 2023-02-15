@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -17,6 +18,7 @@ public abstract class PlaceableObject : MonoBehaviour
     private const string _uiCanvasTag = "UICanvas";
     private const string _uiCameraTag = "UICamera";
     private Camera _uiCamera;
+    private InspectorUI _inspectorUI;
 
     protected virtual void Start() {
         var x = GameObject.FindGameObjectWithTag(_uiCanvasTag);
@@ -24,10 +26,13 @@ public abstract class PlaceableObject : MonoBehaviour
         _uiCamera = y.GetComponent<Camera>();
         _uiCanvasRect = x.GetComponent<RectTransform>();
     }
-    public virtual void Select() {
+    public virtual void Highlight() {
         gameObject.GetComponent<Renderer>().material = data.selectedMaterial;
     }
-    public virtual void Deselect() {
+    public virtual void ShowAsGhost() {
+        gameObject.GetComponent<Renderer>().material = data.ghostMaterial;
+    }
+    public virtual void ResetVisuals() {
         gameObject.GetComponent<Renderer>().material = data.material;
     }
     public virtual void Rotate() {
@@ -40,10 +45,11 @@ public abstract class PlaceableObject : MonoBehaviour
         ShowObjectInspector(canvasPos);
     }
     private void ShowObjectInspector(Vector2 localPosition) {
+        if(_inspectorUI != null) Destroy(_inspectorUI.gameObject);
         GameObject temp = Instantiate(_informationPanelPrefab, _uiCanvasRect);
         temp.transform.localPosition = localPosition;
-        InspectorUI inspectorUI = temp.GetComponent<InspectorUI>();
-        inspectorUI.inspectorFields = _inspectorFields;
-        inspectorUI.Initialize();
+        _inspectorUI = temp.GetComponent<InspectorUI>();
+        _inspectorUI.inspectorFields = _inspectorFields;
+        _inspectorUI.Initialize();
     }
 }

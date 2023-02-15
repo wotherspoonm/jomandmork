@@ -8,19 +8,21 @@ public class Bumper : PlaceableObject
     private Vector2 _surfaceNormal;
     protected override void Start() {
         base.Start();
-        _inspectorFields.Add(new SliderInspectorField(GetAngle,SetAngle,"Angle",360));
+        _inspectorFields.Add(new SliderInspectorField(GetAngle,SetAngle,"Angle",360, 0, 90));
     }
     private void OnTriggerEnter2D(Collider2D collision) {
-        Astronaut ast;
-        if(collision.TryGetComponent(out ast)) {
-            ast.ReflectAbout(_surfaceNormal);
+        if (collision.TryGetComponent(out Astronaut _ast)) {
+            _ast.ReflectAbout(_surfaceNormal);
         }
     }
-    public override void Select() {
+    public override void Highlight() {
 
     }
-    public override void Deselect() {
+    public override void ResetVisuals() {
 
+    }
+    public override void ShowAsGhost() {
+        
     }
     public float GetAngle() { 
         return Mathf.Atan2(_surfaceNormal.x, _surfaceNormal.y);

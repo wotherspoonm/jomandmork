@@ -10,11 +10,11 @@ using UnityEditor.Experimental.GraphView;
 
 public class PlacementManager : MonoBehaviour
 {
-    private PlacementMode mode;
-    [SerializeField] private PlacementGrid placementGrid;
-    [SerializeField] private MenuBar menubar;
+    private PlacementMode _mode;
+    [SerializeField] private PlacementGrid _placementGrid;
+    [SerializeField] private MenuBar _menubar;
 
-    [CanBeNull] private PlaceableObject storedObject;
+    [CanBeNull] private PlaceableObject _storedObject;
     private int _storedObjectOriginalPosition;
     private Vector3 _screenPosition;
     private Vector3 _worldPosition;
@@ -22,100 +22,100 @@ public class PlacementManager : MonoBehaviour
     void Start()
     {
         //placementGrid.Initialise();
-        mode = PlacementMode.NoMode;
+        _mode = PlacementMode.NoMode;
         // Setting delegates for placement tiles
-        for (int j = 0; j < placementGrid.tileList.Count; j++)
+        for (int j = 0; j < _placementGrid.tileList.Count; j++)
         {
             int i = j;
-            placementGrid.tileList[i].GetComponent<PlacementTile>().AddInteractionListener(KeybindManager.Instance.Place, (sender, e) => OnPlaceObjectRequest(i));
-            placementGrid.tileList[i].GetComponent<PlacementTile>().AddInteractionListener(KeybindManager.Instance.Move, (sender, e) => OnMoveObjectRequest(i));
-            placementGrid.tileList[i].GetComponent<PlacementTile>().AddInteractionListener(KeybindManager.Instance.Delete, (sender, e) => OnDeleteObjectRequest(i));
-            placementGrid.tileList[i].GetComponent<PlacementTile>().OnTileMouseEnter += (sender, e) => OnTileMouseEnter(i);
+            _placementGrid.tileList[i].GetComponent<PlacementTile>().AddInteractionListener(KeybindManager.Instance.Place, (sender, e) => OnPlaceObjectRequest(i));
+            _placementGrid.tileList[i].GetComponent<PlacementTile>().AddInteractionListener(KeybindManager.Instance.Move, (sender, e) => OnMoveObjectRequest(i));
+            _placementGrid.tileList[i].GetComponent<PlacementTile>().AddInteractionListener(KeybindManager.Instance.Delete, (sender, e) => OnDeleteObjectRequest(i));
+            _placementGrid.tileList[i].GetComponent<PlacementTile>().OnTileMouseEnter += (sender, e) => OnTileMouseEnter(i);
         }
         // Adding Menubar delegates
-        menubar.MenubarSelectionEventHandler += OnMenubarSelection;
-        menubar.MenubarDeselectionEventHandler += OnMenubarDeselection;
+        _menubar.MenubarSelectionEventHandler += OnMenubarSelection;
+        _menubar.MenubarDeselectionEventHandler += OnMenubarDeselection;
     }
 
     private void OnTileMouseEnter(int index) {
-        if (!placementGrid.IsObjectPlaced(index)) {
-            if (mode == PlacementMode.Create) {
-                placementGrid.SpawnGhostObject(storedObject.data, index);
+        if (!_placementGrid.IsObjectPlaced(index)) {
+            if (_mode == PlacementMode.Create) {
+                _placementGrid.SpawnGhostObject(_storedObject.data, index);
             }
-            else if (mode == PlacementMode.Move) {
-                placementGrid.SpawnGhostObject(storedObject, index);
+            else if (_mode == PlacementMode.Move) {
+                _placementGrid.SpawnGhostObject(_storedObject, index);
             }
         }
     }
 
     private void OnMenubarSelection(object sender, MenubarSelectionEventArgs2 e) {
-        if (mode != PlacementMode.Create) StateLeave();
-        mode = PlacementMode.Create;
-        storedObject = e.objectToSelect.prefab.GetComponent<PlaceableObject>();
+        if (_mode != PlacementMode.Create) StateLeave();
+        _mode = PlacementMode.Create;
+        _storedObject = e.objectToSelect.prefab.GetComponent<PlaceableObject>();
     }
 
     private void OnMenubarDeselection(object sender, MenubarSelectionEventArgs2 e) {
         StateLeave();
-        storedObject = null;
-        mode = PlacementMode.NoMode;
+        _storedObject = null;
+        _mode = PlacementMode.NoMode;
     }
 
     private void OnPlaceObjectRequest(int index)
     {
-        if (mode == PlacementMode.Create && !placementGrid.IsObjectPlaced(index))
+        if (_mode == PlacementMode.Create && !_placementGrid.IsObjectPlaced(index))
         {
-            placementGrid.PlaceObject(storedObject.data, index);
-            menubar.RemoveItem(storedObject.GetComponent<PlaceableObject>().data);
+            _placementGrid.PlaceObject(_storedObject.data, index);
+            _menubar.RemoveItem(_storedObject.GetComponent<PlaceableObject>().data);
         }
     }
 
     private void OnMoveObjectRequest(int index)
     {
-        if (mode == PlacementMode.Move)
+        if (_mode == PlacementMode.Move)
         {
-            if (!placementGrid.IsObjectPlaced(index))
+            if (!_placementGrid.IsObjectPlaced(index))
             {
-                placementGrid.PlaceObject(storedObject, index);
-                Destroy(storedObject.gameObject);
-                mode = PlacementMode.NoMode;
-                storedObject = null;
+                _placementGrid.PlaceObject(_storedObject, index);
+                Destroy(_storedObject.gameObject);
+                _mode = PlacementMode.NoMode;
+                _storedObject = null;
             }
         }
         else
         {
-            if (placementGrid.IsObjectPlaced(index))
+            if (_placementGrid.IsObjectPlaced(index))
             {
                 StateLeave();
-                storedObject = placementGrid.RemoveObject(index);
+                _storedObject = _placementGrid.RemoveObject(index);
                 _storedObjectOriginalPosition = index;
-                storedObject.gameObject.SetActive(false);
-                placementGrid.SpawnGhostObject(storedObject, index);
-                mode = PlacementMode.Move;
+                _storedObject.gameObject.SetActive(false);
+                _placementGrid.SpawnGhostObject(_storedObject, index);
+                _mode = PlacementMode.Move;
             }
         }
     }
 
     private void OnDeleteObjectRequest(int index)
     {
-        if (placementGrid.IsObjectPlaced(index))
+        if (_placementGrid.IsObjectPlaced(index))
         {
-            PlaceableObject objectToDestroy = placementGrid.RemoveObject(index);
-            menubar.AddItem(objectToDestroy.data);
+            PlaceableObject objectToDestroy = _placementGrid.RemoveObject(index);
+            _menubar.AddItem(objectToDestroy.data);
             Destroy(objectToDestroy.gameObject);
         }
     }
 
     private void StateLeave()
     {
-        switch (mode)
+        switch (_mode)
         {
             case PlacementMode.Create:
-                menubar.DeselectItem();
+                _menubar.DeselectItem();
                 break;
             case PlacementMode.Move:
-                placementGrid.PlaceObject(storedObject, _storedObjectOriginalPosition);
-                Destroy(storedObject.gameObject);
-                storedObject = null;
+                _placementGrid.PlaceObject(_storedObject, _storedObjectOriginalPosition);
+                Destroy(_storedObject.gameObject);
+                _storedObject = null;
                 break;
         }
     }

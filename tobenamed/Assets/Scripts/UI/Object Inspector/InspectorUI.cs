@@ -23,12 +23,24 @@ public class InspectorUI : MonoBehaviour
             if (inspectorField is SliderInspectorField sliderInspectorField) {
                 var go = Instantiate(_sliderPrefab,_content);
                 var slider = go.GetComponentInChildren<Slider>();
-                slider.minValue = sliderInspectorField.MinValue;
-                slider.maxValue = sliderInspectorField.MaxValue;
-                slider.value = sliderInspectorField.GetValue.Invoke();
-                slider.onValueChanged.AddListener((value) => {
-                    sliderInspectorField.SetValue(value);
-                });
+                if(sliderInspectorField.DiscreteInterval == 0) {
+                    slider.wholeNumbers = false;
+                    slider.minValue = sliderInspectorField.MinValue;
+                    slider.maxValue = sliderInspectorField.MaxValue;
+                    slider.value = sliderInspectorField.GetValue.Invoke();
+                    slider.onValueChanged.AddListener((value) => {
+                        sliderInspectorField.SetValue(value);
+                    });
+                }
+                else {
+                    slider.wholeNumbers = true;
+                    slider.minValue = sliderInspectorField.MinValue / sliderInspectorField.DiscreteInterval;
+                    slider.maxValue = sliderInspectorField.MaxValue / sliderInspectorField.DiscreteInterval;
+                    slider.value = sliderInspectorField.GetValue.Invoke() / sliderInspectorField.DiscreteInterval;
+                    slider.onValueChanged.AddListener(value => {
+                        sliderInspectorField.SetValue(value * sliderInspectorField.DiscreteInterval);
+                    });
+                }
             }
         }
     }

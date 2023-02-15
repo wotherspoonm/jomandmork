@@ -30,12 +30,12 @@ public class MenuItem : InteractableGameObject, IPointerEnterHandler, IPointerEx
 
     public void ShowAsSelected() {
         isSelected = true;
-        displayItemPO.Select();
+        displayItemPO.Highlight();
         animator.SetSpin(spinspeed);
     }
     public void ShowAsDeselected() {
         isSelected = false;
-        displayItemPO.Deselect();
+        displayItemPO.ResetVisuals();
         animator.SetSpin(0);
         animator.SetAngle(defaultRotation);
     }

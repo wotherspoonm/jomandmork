@@ -47,7 +47,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: c7e3d05ece041e547840ad0f4ca11da7, type: 2}
-  _informationPanelPrefab: {fileID: 1637158124586834917, guid: 39f3610c49bf0408293d760d7cca84ea, type: 3}
+  _informationPanelPrefab: {fileID: 7984138991008711003, guid: 22abd116c769aeb4d80df94ec946eb0e, type: 3}
   _popupOffset: {x: 0, y: 0, z: 0}
   _uiCanvasRect: {fileID: 0}
   _surfaceNormal: {x: 1, y: 1}

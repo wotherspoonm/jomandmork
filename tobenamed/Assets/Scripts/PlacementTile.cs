@@ -58,7 +58,7 @@ public class PlacementTile : InteractableGameObject
             Quaternion newRotation = new();
             ghostObject.transform.rotation = newRotation;
 
-            ghostObject.GetComponent<Renderer>().material = placeableObjectSO.ghostMaterial;
+            ghostObject.ShowAsGhost();
             ghostObjectSpawned = true;
         }
     }
