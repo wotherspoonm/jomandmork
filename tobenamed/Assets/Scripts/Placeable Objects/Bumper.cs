@@ -8,7 +8,7 @@ public class Bumper : PlaceableObject
     private Vector2 _surfaceNormal;
     protected override void Start() {
         base.Start();
-        _inspectorFields.Add(new SliderInspectorField(GetAngle,SetAngle,"Angle",360, 0, 90));
+        _inspectorFields.Add(new SliderInspectorField(GetAngle,SetAngle,"Angle",0, 270, 90));
     }
     private void OnTriggerEnter2D(Collider2D collision) {
         if (collision.TryGetComponent(out Astronaut _ast)) {
@@ -29,8 +29,11 @@ public class Bumper : PlaceableObject
     }
 
     public void SetAngle(float angle) {
-        _surfaceNormal = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
         transform.rotation = Quaternion.Euler(new Vector3(0,0,angle));
+        // Convert angle to radians and ofset by 45 deg (This probably needs to be refactored)
+        angle += 45;
+        angle *= Mathf.Deg2Rad;
+        _surfaceNormal = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
     }
 
 

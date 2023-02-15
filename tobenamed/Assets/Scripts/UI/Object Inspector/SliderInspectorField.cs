@@ -12,7 +12,7 @@ public class SliderInspectorField : InspectorFieldBase<float> {
     public float MinValue => _minValue;
     private float _discreteInterval;
     public float DiscreteInterval => _discreteInterval;
-    public SliderInspectorField(Func<float> getValue, Action<float> setValue, string name, float maxValue, float minValue = 0, float discreteInterval = 0) : base(getValue, setValue, name) {
+    public SliderInspectorField(Func<float> getValue, Action<float> setValue, string name, float minValue, float maxValue = 0, float discreteInterval = 0) : base(getValue, setValue, name) {
         this._maxValue = maxValue;
         this._minValue = minValue;
         this._discreteInterval = discreteInterval;
